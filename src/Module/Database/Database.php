@@ -1,27 +1,40 @@
 <?php
+declare (strict_types=1);
 
 namespace Project\Module\Database;
 
 use Project\Configuration;
 
+/**
+ * Class Database
+ * @package Project\Module\Database
+ */
 class Database
 {
-    protected static $instance;
-
+    /** @var  string $host */
     protected $host;
 
+    /** @var  string $user */
     protected $user;
 
+    /** @var  string $password */
     protected $password;
 
+    /** @var  string $database */
     protected $database;
 
-    /**
-     * @var \PDO $connection
-     */
+    /** @var  array $query */
+    protected $query;
+
+    /** @var \PDO $connection */
     protected $connection;
 
-    protected function __construct(Configuration $configuration)
+    /**
+     * Database constructor.
+     * @param Configuration $configuration
+     * @throws \InvalidArgumentException
+     */
+    public function __construct(Configuration $configuration)
     {
         $databaseConfiguration = $configuration->getEntryByName('database');
 
@@ -33,68 +46,94 @@ class Database
         $this->connect();
     }
 
+    /**
+     * connect to database
+     */
     public function connect(): void
     {
-        $dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->database /*. ';charset=UTF-8'*/;
+        $dsn = 'mysql:host=' . $this->host . ';dbname=' . $this->database;
         $this->connection = new \PDO($dsn, $this->user, $this->password);
     }
 
-    public function getConnection(): \PDO
+    /**
+     * @param string $table
+     * @return Query
+     */
+    public function getNewSelectQuery(string $table): Query
     {
-        return $this->connection;
+        $query = new Query($table);
+        $query->addType(Query::SELECT);
+
+        return $query;
     }
 
-    public static function getInstance(): self
+    /**
+     * @param string $table
+     * @return Query
+     */
+    public function getNewUpdateQuery(string $table): Query
     {
-        if (self::$instance === null) {
-            self::$instance = new self(new Configuration());
-        }
+        $query = new Query($table);
+        $query->addType(Query::UPDATE);
 
-        return self::$instance;
+        return $query;
     }
 
-    public function fetchAll(string $table): array
+    /**
+     * @param string $table
+     * @return Query
+     */
+    public function getNewInsertQuery(string $table): Query
     {
-        $sql = $this->connection->query('SELECT * FROM ' . $table);
+        $query = new Query($table);
+        $query->addType(Query::INSERT);
+
+        return $query;
+    }
+
+    /**
+     * @param string $table
+     * @return Query
+     */
+    public function getNewDeleteQuery(string $table): Query
+    {
+        $query = new Query($table);
+        $query->addType(Query::DELETE);
+
+        return $query;
+    }
+
+
+    /**
+     * @param Query $query
+     * @return array
+     */
+    public function fetchAll(Query $query): array
+    {
+        $sql = $this->connection->query($query->getQuery());
 
         return $sql->fetchAll(\PDO::FETCH_OBJ);
     }
 
-    public function fetchAllOrderBy(string $table, string $orderBy, string $orderKind = 'ASC'): array
+    /**
+     * @param Query $query
+     * @return mixed
+     */
+    public function fetch(Query $query)
     {
-        $sql = $this->connection->query('SELECT * FROM ' . $table . ' ORDER BY ' . $orderBy . ' ' . $orderKind);
-
-        return $sql->fetchAll(\PDO::FETCH_OBJ);
-    }
-
-    public function fetchLimitedOrderBy(string $table, string $orderBy, string $orderKind = 'ASC', int $limit = 1): array
-    {
-        $sql = $this->connection->query('SELECT * FROM ' . $table . ' ORDER BY ' . $orderBy . ' ' . $orderKind . ' LIMIT ' . $limit);
-
-        return $sql->fetchAll(\PDO::FETCH_OBJ);
-    }
-
-    public function fetchByDateParameterFuture(string $table, string $dateName, string $dateValue, string $orderBy, string $orderKind = 'ASC', int $limit = 1)
-    {
-        $sql = $this->connection->query('SELECT * FROM ' . $table . ' WHERE ' . $dateName . ' > "' . $dateValue . '" ORDER BY ' . $orderBy . ' ' . $orderKind . ' LIMIT ' . $limit);
-
-        return $sql->fetchAll(\PDO::FETCH_OBJ);
-    }
-
-
-    public function fetchById(string $table, string $idName, string $idValue)
-    {
-        $sql = $this->connection->query('SELECT * FROM ' . $table . ' WHERE ' . $idName . ' = "' . $idValue . '"');
+        $sql = $this->connection->query($query->getQuery());
 
         return $sql->fetch(\PDO::FETCH_OBJ);
     }
 
-    public function fetchByStringParameter(string $table, $parameter, $value)
+    /**
+     * @param Query $query
+     * @return bool
+     */
+    public function execute(Query $query): bool
     {
-        $sql = $this->connection->query('SELECT * FROM ' . $table . ' WHERE ' . $parameter. ' = "' . $value . '"');
+        $sql = $this->connection->prepare($query->getQuery());
 
-        $result = $sql->fetchAll(\PDO::FETCH_OBJ);
-
-        return $result;
+        return $sql->execute();
     }
 }

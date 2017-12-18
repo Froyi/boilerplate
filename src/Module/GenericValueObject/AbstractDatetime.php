@@ -3,9 +3,13 @@ declare (strict_types=1);
 
 namespace Project\Module\GenericValueObject;
 
+/**
+ * Class AbstractDatetime
+ * @package Project\Module\GenericValueObject
+ */
 abstract class AbstractDatetime
 {
-    const DATE_FORMAT = 'Y-m-d H:i:s';
+    public const DATE_FORMAT = 'Y-m-d H:i:s';
 
     /** @var  \DateTime $datetime */
     protected $datetime;
@@ -22,8 +26,9 @@ abstract class AbstractDatetime
     /**
      * @param $datetime
      * @return AbstractDatetime
+     * @throws \InvalidArgumentException
      */
-    public static function fromValue($datetime)
+    public static function fromValue($datetime): self
     {
         self::ensureDatetimeIsValid($datetime);
 
@@ -34,6 +39,7 @@ abstract class AbstractDatetime
 
     /**
      * @param $datetime
+     * @throws \InvalidArgumentException
      */
     protected static function ensureDatetimeIsValid($datetime): void
     {

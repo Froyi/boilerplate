@@ -1,21 +1,24 @@
 <?php
-declare(strict_types = 1);
+declare (strict_types=1);
 
 namespace Project\Utilities;
 
-
+/**
+ * Class Converter
+ * @package Project\Utilities
+ */
 class Converter
 {
-    const GERMAN_WEEKDAYS = [
+    protected const GERMAN_WEEKDAYS = [
         'long' => [
-        0 => 'Sonntag',
-        1 => 'Montag',
-        2 => 'Dienstag',
-        3 => 'Mittwoch',
-        4 => 'Donnerstag',
-        5 => 'Freitag',
-        6 => 'Samstag'
-            ],
+            0 => 'Sonntag',
+            1 => 'Montag',
+            2 => 'Dienstag',
+            3 => 'Mittwoch',
+            4 => 'Donnerstag',
+            5 => 'Freitag',
+            6 => 'Samstag'
+        ],
         'short' => [
             0 => 'So',
             1 => 'Mo',
@@ -27,6 +30,11 @@ class Converter
         ]
     ];
 
+    /**
+     * @param int $day
+     * @return string
+     * @throws \InvalidArgumentException
+     */
     public static function convertIntToWeekday(int $day): string
     {
         if ($day < 0 && $day > 6) {
@@ -36,6 +44,11 @@ class Converter
         return self::GERMAN_WEEKDAYS['long'][$day];
     }
 
+    /**
+     * @param int $day
+     * @return string
+     * @throws \InvalidArgumentException
+     */
     public static function convertIntToWeekdayShort(int $day): string
     {
         if ($day < 0 && $day > 6) {

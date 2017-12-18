@@ -1,22 +1,37 @@
 <?php
-declare(strict_types=1);
+declare (strict_types=1);
 
 namespace Project\Module\GenericValueObject;
 
-
+/**
+ * Class Datetime
+ * @package Project\Module\GenericValueObject
+ */
 class Datetime extends AbstractDatetime implements DatetimeInterface
 {
-    const DATETIME_FORMAT = 'Y-m-d H:i';
+    public const DATETIME_FORMAT = 'Y-m-d H:i';
 
-    const DATE_FORMAT = 'Y-m-d';
+    public const FORM_FORMAT = 'Y-m-d\TH:i:s';
 
-    const DATETIME_OUTPUT_FORMAT = 'd.m.Y H:i';
+    public const DATE_FORMAT = 'Y-m-d';
 
-    const DATE_OUTPUT_FORMAT = 'd.m.Y';
+    public const DATETIME_OUTPUT_FORMAT = 'd.m.Y H:i';
 
-    const TIME_FORMAT = 'H:i';
+    public const DATE_OUTPUT_FORMAT = 'd.m.Y';
 
-    const WEEKDAY_FORMAT = 'w';
+    public const TIME_FORMAT = 'H:i';
+
+    public const WEEKDAY_FORMAT = 'w';
+
+    /**
+     * @param $datetime
+     * @return AbstractDatetime
+     * @throws \InvalidArgumentException
+     */
+    public static function fromValue($datetime): AbstractDatetime
+    {
+        return parent::fromValue($datetime);
+    }
 
     /**
      * @return string
@@ -35,6 +50,14 @@ class Datetime extends AbstractDatetime implements DatetimeInterface
     }
 
     /**
+     * @return string
+     */
+    public function getFormFormat(): string
+    {
+        return (string)date(self::FORM_FORMAT, $this->datetime);
+    }
+
+    /**
      * @return int
      */
     public function getWeekday(): int
@@ -43,26 +66,35 @@ class Datetime extends AbstractDatetime implements DatetimeInterface
     }
 
     /**
-     * @param $datetime
-     * @return AbstractDatetime|DatetimeInterface
+     * @return string
      */
-    public static function fromValue($datetime)
-    {
-        return parent::fromValue($datetime);
-    }
-
     public function getDate(): string
     {
         return (string)date(self::DATE_FORMAT, $this->datetime);
     }
 
+    /**
+     * @return string
+     */
     public function getDateString(): string
     {
         return (string)date(self::DATE_OUTPUT_FORMAT, $this->datetime);
     }
 
+    /**
+     * @return string
+     */
     public function getTimeString(): string
     {
         return (string)date(self::TIME_FORMAT, $this->datetime);
+    }
+
+    /**
+     * @param int $days
+     * @return bool
+     */
+    public function isOlderThanDays(int $days): bool
+    {
+        return ($this->datetime < strtotime('-' . $days . ' days'));
     }
 }

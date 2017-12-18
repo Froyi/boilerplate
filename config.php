@@ -7,7 +7,6 @@ return [
     'template' => [
         'name' => 'default',
         'dir' =>  '/default',
-        'cacheDir' => '/cache'
     ],
     'database' => [
         'host' => 'localhost',

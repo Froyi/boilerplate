@@ -1,10 +1,14 @@
 <?php
-declare(strict_types=1);
+declare (strict_types=1);
 
 namespace Project\Module\GenericValueObject;
 
 use League\Uri\Schemes\Http;
 
+/**
+ * Class Link
+ * @package Project\Module\GenericValueObject
+ */
 class Link
 {
     /** @var  Http $link */
@@ -38,14 +42,20 @@ class Link
         return $this->link;
     }
 
+    /**
+     * @return string
+     */
     public function __toString(): string
     {
-        return (string) $this->link;
+        return (string)$this->link;
     }
 
+    /**
+     * @return string
+     */
     public function toString(): string
     {
-        return (string) $this->link;
+        return (string)$this->link;
     }
 
 

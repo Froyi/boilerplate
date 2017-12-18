@@ -1,15 +1,19 @@
 <?php
-declare(strict_types = 1);
+declare (strict_types = 1);
 
 namespace Project\Module\GenericValueObject;
 
+/**
+ * Class Date
+ * @package Project\Module\GenericValueObject
+ */
 class Date extends AbstractDatetime implements DateInterface
 {
-    const DATE_FORMAT = 'Y-m-d';
+    public const DATE_FORMAT = 'Y-m-d';
 
-    const DATE_OUTPUT_FORMAT = 'd.m.Y';
+    public const DATE_OUTPUT_FORMAT = 'd.m.Y';
 
-    const WEEKDAY_FORMAT = 'w';
+    public const WEEKDAY_FORMAT = 'w';
 
     /**
      * @return string
@@ -37,10 +41,20 @@ class Date extends AbstractDatetime implements DateInterface
 
     /**
      * @param $datetime
-     * @return AbstractDatetime|DateInterface
+     * @return AbstractDatetime
+     * @throws \InvalidArgumentException
      */
-    public static function fromValue($datetime)
+    public static function fromValue($datetime): AbstractDatetime
     {
         return parent::fromValue($datetime);
+    }
+
+    /**
+     * @param int $days
+     * @return bool
+     */
+    public function isOlderThanDays(int $days): bool
+    {
+        return ($this->datetime < strtotime('-' . $days . ' days'));
     }
 }

@@ -1,14 +1,22 @@
 <?php
-declare(strict_types = 1);
+declare (strict_types=1);
 
 namespace Project;
 
+/**
+ * Class Configuration
+ * @package Project
+ */
 class Configuration
 {
-    const CONFIG_PATH = ROOT_PATH . '/config.php';
+    protected const CONFIG_PATH = ROOT_PATH . '/config.php';
 
+    /** @var array $configuration */
     protected $configuration;
 
+    /**
+     * Configuration constructor.
+     */
     public function __construct()
     {
         $this->configuration = include self::CONFIG_PATH;
@@ -22,6 +30,11 @@ class Configuration
         return $this->configuration;
     }
 
+    /**
+     * @param string $name
+     * @return mixed
+     * @throws \InvalidArgumentException
+     */
     public function getEntryByName(string $name)
     {
         if (!isset($this->configuration[$name])) {

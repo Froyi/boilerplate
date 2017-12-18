@@ -1,21 +1,22 @@
 <?php
+declare (strict_types=1);
 
 namespace Project\View;
 
 use Project\Configuration;
 use Project\Utilities\Converter;
-use Project\View\ValueObject\CacheDir;
 use Project\View\ValueObject\TemplateDir;
 
+/**
+ * Class ViewRenderer
+ * @package Project\View
+ */
 class ViewRenderer
 {
-    const DEFAULT_PAGE_TEMPLATE = 'index.twig';
+    protected const DEFAULT_PAGE_TEMPLATE = 'index.twig';
 
     /** @var TemplateDir $templateDir */
     protected $templateDir;
-
-    /** @var CacheDir $cacheDir */
-    protected $cacheDir;
 
     /** @var \Twig_Environment $viewRenderer */
     protected $viewRenderer;
@@ -29,13 +30,13 @@ class ViewRenderer
     /**
      * ViewRenderer constructor.
      * @param Configuration $configuration
+     * @throws \InvalidArgumentException
      */
     public function __construct(Configuration $configuration)
     {
         $template = $configuration->getEntryByName('template');
 
         $this->templateDir = TemplateDir::fromString($template['dir']);
-        $this->cacheDir = CacheDir::fromString($template['cacheDir']);
         $this->templateName = $template['name'];
 
         $loaderFilesystem = new \Twig_Loader_Filesystem($this->templateDir->getTemplateDir());
@@ -49,6 +50,9 @@ class ViewRenderer
     /**
      * @param string $template
      * @throws \Twig_Error_Loader
+     * @throws \InvalidArgumentException
+     * @throws \Twig_Error_Syntax
+     * @throws \Twig_Error_Runtime
      */
     public function renderTemplate(string $template = self::DEFAULT_PAGE_TEMPLATE): void
     {
