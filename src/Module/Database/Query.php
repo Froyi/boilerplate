@@ -203,6 +203,9 @@ class Query
             case self::DELETE:
                 $queryString .= self::DELETE . self::FROM . $this->getTables();
                 $queryString .= $this->where;
+                break;
+            default:
+                break;
         }
 
         return $queryString;

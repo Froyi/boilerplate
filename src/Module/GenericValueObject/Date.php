@@ -39,15 +39,6 @@ class Date extends AbstractDatetime implements DateInterface
         return (int) date(self::WEEKDAY_FORMAT, $this->datetime);
     }
 
-    /**
-     * @param $datetime
-     * @return AbstractDatetime
-     * @throws \InvalidArgumentException
-     */
-    public static function fromValue($datetime): AbstractDatetime
-    {
-        return parent::fromValue($datetime);
-    }
 
     /**
      * @param int $days

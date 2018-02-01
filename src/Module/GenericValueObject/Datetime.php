@@ -24,16 +24,6 @@ class Datetime extends AbstractDatetime implements DatetimeInterface
     public const WEEKDAY_FORMAT = 'w';
 
     /**
-     * @param $datetime
-     * @return AbstractDatetime
-     * @throws \InvalidArgumentException
-     */
-    public static function fromValue($datetime): AbstractDatetime
-    {
-        return parent::fromValue($datetime);
-    }
-
-    /**
      * @return string
      */
     public function __toString(): string

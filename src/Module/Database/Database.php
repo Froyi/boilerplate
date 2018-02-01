@@ -23,9 +23,6 @@ class Database
     /** @var  string $database */
     protected $database;
 
-    /** @var  array $query */
-    protected $query;
-
     /** @var \PDO $connection */
     protected $connection;
 
