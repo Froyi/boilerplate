@@ -28,7 +28,10 @@ class Image extends DefaultGenericValueObject
 
     /**
      * Image constructor.
+     *
      * @param string $path
+     *
+     * @throws \Exception
      */
     protected function __construct(string $path)
     {
@@ -47,7 +50,9 @@ class Image extends DefaultGenericValueObject
 
     /**
      * @param string $path
+     *
      * @return Image
+     * @throws \Exception
      */
     public static function fromFile(string $path): self
     {
@@ -55,9 +60,11 @@ class Image extends DefaultGenericValueObject
     }
 
     /**
-     * @param array $uploadedFile
+     * @param array  $uploadedFile
      * @param string $path
+     *
      * @return null|Image
+     * @throws \Exception
      */
     public static function fromUploadWithSave(array $uploadedFile, string $path): ?self
     {

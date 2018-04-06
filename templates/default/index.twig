@@ -1,7 +1,15 @@
-{% include ('basic/header.twig') %}
+<!DOCTYPE html>
+<html>
+<head>
+    {% include ('basic/head.twig') %}
+</head>
+<body>
+    {% include ('basic/header.twig') %}
 
-<div class="main-content js-main-content">
-    {% include ('page/' ~ page ~ '.twig') %}
-</div>
+    <div class="main-content js-main-content">
+        {% include ('page/' ~ page ~ '.twig') %}
+    </div>
 
-{{ include ('basic/footer.twig') }}
+    {% include ('basic/footer.twig') %}
+</body>
+</html>

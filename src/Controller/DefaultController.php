@@ -24,7 +24,8 @@ class DefaultController
 
     /**
      * DefaultController constructor.
-     * @throws \InvalidArgumentException
+     *
+     * @param Configuration $configuration
      */
     public function __construct(Configuration $configuration)
     {

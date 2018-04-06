@@ -15,9 +15,9 @@ if (Tools::getValue('route') !== false) {
     $route = Tools::getValue('route');
 }
 
-try {
-    $configuration = new Configuration();
+$configuration = new Configuration();
 
+try {
     $routing = new Routing($configuration);
     $routing->startRoute($route);
 } catch (\InvalidArgumentException $error) {

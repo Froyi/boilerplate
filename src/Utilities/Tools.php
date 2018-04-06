@@ -49,6 +49,8 @@ class Tools
 
     /**
      * @param string $route
+     * @param array  $parameter
+     *
      * @return string
      */
     public static function getRouteUrl(string $route = '', array $parameter = []): string
