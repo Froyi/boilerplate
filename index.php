@@ -15,11 +15,17 @@ if (Tools::getValue('route') !== false) {
     $route = Tools::getValue('route');
 }
 
-$routing = new Routing(new Configuration());
-
 try {
+    $configuration = new Configuration();
+
+    $routing = new Routing($configuration);
     $routing->startRoute($route);
 } catch (\InvalidArgumentException $error) {
-    $indexController = new IndexController();
-    $indexController->errorPageAction();
+    $indexController = new IndexController($configuration);
+    try {
+        $indexController->errorPageAction();
+    } catch (\Twig_Error_Loader | \Twig_Error_Runtime | \Twig_Error_Syntax $e) {
+        echo 'There is something wrong!';
+        exit;
+    }
 }
