@@ -38,7 +38,7 @@ class Database
         $this->host = $databaseConfiguration['host'];
         $this->user = $databaseConfiguration['user'];
         $this->password = $databaseConfiguration['password'];
-        $this->database = $databaseConfiguration['database'];
+        $this->database = $databaseConfiguration['database_name'];
 
         $this->connect();
     }

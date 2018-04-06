@@ -37,25 +37,24 @@ class Routing
     }
 
     /**
-     * @param string $route
-     * @throws \InvalidArgumentException
+     * @param string $routeName
      */
-    public function startRoute(string $route): void
+    public function startRoute(string $routeName): void
     {
-        if (isset($this->routeConfiguration[$route]) === false) {
+        if (isset($this->routeConfiguration[$routeName]) === false) {
             if (isset($this->routeConfiguration[self::ERROR_ROUTE]) === false) {
                 throw new \InvalidArgumentException('There is no valid Route. Look in the config for mapping.');
             }
 
             $route = $this->routeConfiguration[self::ERROR_ROUTE];
         } else {
-            $route = $this->routeConfiguration[$route];
+            $route = $this->routeConfiguration[$routeName];
         }
 
         $controllerName = $this->projectNamespace . '\\' . $this->controllerNamespace . '\\' . $route['controller'];
         $actionName = $route['action'];
 
-        $controller = new $controllerName($this->configuration);
+        $controller = new $controllerName($this->configuration, $routeName);
         $controller->$actionName();
     }
 }

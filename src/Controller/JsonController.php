@@ -19,10 +19,11 @@ class JsonController extends DefaultController
      * JsonController constructor.
      *
      * @param Configuration $configuration
+     * @param string        $routeName
      */
-    public function __construct(Configuration $configuration)
+    public function __construct(Configuration $configuration, string $routeName)
     {
-        parent::__construct($configuration);
+        parent::__construct($configuration, $routeName);
 
         $this->jsonModel = new JsonModel();
     }

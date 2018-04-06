@@ -21,7 +21,7 @@ try {
     $routing = new Routing($configuration);
     $routing->startRoute($route);
 } catch (\InvalidArgumentException $error) {
-    $indexController = new IndexController($configuration);
+    $indexController = new IndexController($configuration, $route);
     try {
         $indexController->errorPageAction();
     } catch (\Twig_Error_Loader | \Twig_Error_Runtime | \Twig_Error_Syntax $e) {

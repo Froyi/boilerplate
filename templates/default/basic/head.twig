@@ -2,4 +2,10 @@
 
 <link rel="stylesheet" href="{{ templateDir }}/css/main.css">
 
-<script src="{{ templateDir }}/js/main.js"></script>
+{% for jsPlugin in jsPlugins %}
+    <script src="{{ templateDir }}{{ jsPlugin }}"></script>
+{% endfor %}
+
+    {% for jsPlugin in jsRoutePlugins %}
+    <script src="{{ templateDir }}{{ jsPlugin }}"></script>
+{% endfor %}

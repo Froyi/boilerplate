@@ -5,6 +5,7 @@ namespace Project\Controller;
 
 use Project\Configuration;
 use Project\Module\Database\Database;
+use Project\Service\JsPluginService;
 use Project\View\ViewRenderer;
 
 /**
@@ -26,14 +27,17 @@ class DefaultController
      * DefaultController constructor.
      *
      * @param Configuration $configuration
+     * @param string        $routeName
      */
-    public function __construct(Configuration $configuration)
+    public function __construct(Configuration $configuration, string $routeName)
     {
         $this->configuration = $configuration;
         $this->viewRenderer = new ViewRenderer($this->configuration);
         $this->database = new Database($this->configuration);
 
         $this->setDefaultViewConfig();
+
+        $this->setJsPackages($routeName);
     }
 
     /**
@@ -42,6 +46,20 @@ class DefaultController
     protected function setDefaultViewConfig(): void
     {
         $this->viewRenderer->addViewConfig('page', 'notfound');
+    }
+
+    /**
+     * @param string $routeName
+     */
+    protected function setJsPackages(string $routeName): void
+    {
+        $jsPlugInService = new JsPluginService($this->configuration);
+
+        $jsMainPackage = $jsPlugInService->getMainPackages();
+        $this->viewRenderer->addViewConfig('jsPlugins', $jsMainPackage);
+
+        $jsRoutePackage = $jsPlugInService->getPackagesByRouteName($routeName);
+        $this->viewRenderer->addViewConfig('jsRoutePlugins', $jsRoutePackage);
     }
 
     /**

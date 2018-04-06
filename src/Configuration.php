@@ -1,5 +1,4 @@
-<?php
-declare (strict_types=1);
+<?php declare (strict_types=1);
 
 namespace Project;
 
@@ -9,7 +8,18 @@ namespace Project;
  */
 class Configuration
 {
-    protected const CONFIG_PATH = ROOT_PATH . '/config.php';
+    protected const DEFAULT_CONFIG_PATH = ROOT_PATH . '/config.php';
+
+    protected const ROUTE_CONFIG_PATH = ROOT_PATH . '/config-routing.php';
+
+    protected const JS_CONFIG_PATH = ROOT_PATH . '/config-js.php';
+
+    protected const CONFIG_LIST = [
+        'default' => self::DEFAULT_CONFIG_PATH,
+        'route' => self::ROUTE_CONFIG_PATH,
+        'js' => self::JS_CONFIG_PATH
+    ];
+
 
     /** @var array $configuration */
     protected $configuration;
@@ -19,7 +29,11 @@ class Configuration
      */
     public function __construct()
     {
-        $this->configuration = include self::CONFIG_PATH;
+        $this->configuration = [];
+
+        foreach(self::CONFIG_LIST as $config) {
+            $this->configuration = array_merge($this->configuration, include $config);
+        }
     }
 
     /**
@@ -32,6 +46,7 @@ class Configuration
 
     /**
      * @param string $name
+     *
      * @return mixed
      * @throws \InvalidArgumentException
      */

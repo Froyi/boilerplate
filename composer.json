@@ -1,27 +1,32 @@
 {
-    "name": "php-boilerplate",
-    "description": "This is my boilerplate for every small project.",
-    "type": "website",
-    "keywords": ["edit these"],
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Maik Schößler",
-            "email": "ms2002@onlinehome.de"
-        }
-    ],
-    "require-dev": {
-        "roave/security-advisories": "dev-master"
-    },
-    "require": {
-        "php": "^7.0",
-        "twig/twig": "2.4.3",
-        "ramsey/uuid": "3.6.1",
-        "league/uri": "5.*",
-        "claviska/simpleimage": "3.*",
-        "tinify/tinify": "1.*"
-    },
-    "autoload": {
-        "psr-4": {"Project\\": "src/"}
+  "name": "php-boilerplate",
+  "description": "This is my boilerplate for every small project.",
+  "type": "website",
+  "keywords": [
+    "edit these"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Maik Schößler",
+      "email": "ms2002@onlinehome.de"
     }
+  ],
+  "require-dev": {
+    "roave/security-advisories": "dev-master"
+  },
+  "require": {
+    "php": "^7.0",
+    "twig/twig": "2.4.3",
+    "ramsey/uuid": "3.6.1",
+    "league/uri": "5.*",
+    "claviska/simpleimage": "3.*",
+    "tinify/tinify": "1.*",
+    "swiftmailer/swiftmailer": "6.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Project\\": "src/"
+    }
+  }
 }
