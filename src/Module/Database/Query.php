@@ -232,7 +232,7 @@ class Query
     protected function getTables(): string
     {
         if (empty($this->tableArray)) {
-            throw new \RuntimeException('Es wurde keine Tabelle angegeben!');
+            throw new \UnexpectedValueException('Es wurde keine Tabelle angegeben!');
         }
 
         return implode(',', $this->tableArray) . ' ';

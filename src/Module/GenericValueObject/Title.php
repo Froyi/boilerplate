@@ -7,7 +7,7 @@ namespace Project\Module\GenericValueObject;
  * Class Title
  * @package Project\Module\GenericValueObject
  */
-class Title
+class Title extends DefaultGenericValueObject
 {
     const TITLE_MIN_LENGTH = 5;
 

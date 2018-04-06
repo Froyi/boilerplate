@@ -9,7 +9,7 @@ use League\Uri\Schemes\Http;
  * Class Link
  * @package Project\Module\GenericValueObject
  */
-class Link
+class Link extends DefaultGenericValueObject
 {
     /** @var  Http $link */
     protected $link;

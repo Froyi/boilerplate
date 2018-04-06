@@ -7,7 +7,7 @@ namespace Project\Module\GenericValueObject;
  * Class Text
  * @package Project\Module\GenericValueObject
  */
-class Text
+class Text extends DefaultGenericValueObject
 {
     const MIN_TEXT_LENGTH = 50;
 

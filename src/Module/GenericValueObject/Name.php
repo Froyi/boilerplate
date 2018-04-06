@@ -7,7 +7,7 @@ namespace Project\Module\GenericValueObject;
  * Class Name
  * @package Project\Module\GenericValueObject
  */
-class Name
+class Name extends DefaultGenericValueObject
 {
     /** @var string $name */
     protected $name;

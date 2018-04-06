@@ -9,7 +9,7 @@ use claviska\SimpleImage;
  * Class Image
  * @package Project\Module\GenericValueObject
  */
-class Image
+class Image extends DefaultGenericValueObject
 {
     public const PATH_NEWS = 'data/img/news/';
     public const PATH_ALBUM = 'data/img/galerie/';

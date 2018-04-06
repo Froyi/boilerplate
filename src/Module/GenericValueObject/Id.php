@@ -9,7 +9,7 @@ use Ramsey\Uuid\Uuid;
  * Class Id
  * @package Project\Module\GenericValueObject
  */
-class Id
+class Id extends DefaultGenericValueObject
 {
     /** @var Uuid $id */
     protected $id;

@@ -12,14 +12,14 @@ require ROOT_PATH . '/vendor/autoload.php';
 $route = 'index';
 
 if (Tools::getValue('route') !== false) {
-    $route = Tools::getValue('route') ;
+    $route = Tools::getValue('route');
 }
 
 $routing = new Routing(new Configuration());
 
 try {
     $routing->startRoute($route);
-} catch(\InvalidArgumentException $error) {
+} catch (\InvalidArgumentException $error) {
     $indexController = new IndexController();
     $indexController->errorPageAction();
 }

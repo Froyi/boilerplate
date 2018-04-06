@@ -17,7 +17,8 @@
         "twig/twig": "2.4.3",
         "ramsey/uuid": "3.6.1",
         "league/uri": "5.*",
-        "claviska/simpleimage": "3.*"
+        "claviska/simpleimage": "3.*",
+        "tinify/tinify": "*"
     },
     "autoload": {
         "psr-4": {"Project\\": "src/"}

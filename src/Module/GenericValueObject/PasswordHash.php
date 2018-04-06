@@ -7,7 +7,7 @@ namespace Project\Module\GenericValueObject;
  * Class PasswordHash
  * @package Project\Module\GenericValueObject
  */
-class PasswordHash
+class PasswordHash extends DefaultGenericValueObject
 {
     const CRYPTER = PASSWORD_BCRYPT;
 

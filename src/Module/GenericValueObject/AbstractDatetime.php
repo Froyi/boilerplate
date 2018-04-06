@@ -7,7 +7,7 @@ namespace Project\Module\GenericValueObject;
  * Class AbstractDatetime
  * @package Project\Module\GenericValueObject
  */
-abstract class AbstractDatetime
+abstract class AbstractDatetime extends DefaultGenericValueObject
 {
     public const DATE_FORMAT = 'Y-m-d H:i:s';
 

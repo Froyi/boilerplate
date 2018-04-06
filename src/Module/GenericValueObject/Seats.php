@@ -7,7 +7,7 @@ namespace Project\Module\GenericValueObject;
  * Class Seats
  * @package Project\Module\GenericValueObject
  */
-class Seats
+class Seats extends DefaultGenericValueObject
 {
     const SEATS_MIN = 1;
 
