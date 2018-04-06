@@ -1,9 +1,8 @@
-<?php
-declare (strict_types=1);
+<?php declare (strict_types=1);
 
 namespace Project\Module\GenericValueObject;
 
-use League\Uri\Schemes\Http;
+use League\Uri\Http;
 
 /**
  * Class Link
@@ -16,6 +15,7 @@ class Link extends DefaultGenericValueObject
 
     /**
      * @param string $link
+     *
      * @return Link
      */
     public static function fromString(string $link): self
@@ -27,6 +27,7 @@ class Link extends DefaultGenericValueObject
 
     /**
      * Link constructor.
+     *
      * @param Http $link
      */
     protected function __construct(Http $link)
@@ -57,6 +58,4 @@ class Link extends DefaultGenericValueObject
     {
         return (string)$this->link;
     }
-
-
 }
