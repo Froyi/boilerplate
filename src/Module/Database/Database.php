@@ -28,7 +28,9 @@ class Database
 
     /**
      * Database constructor.
+     *
      * @param Configuration $configuration
+     *
      * @throws \InvalidArgumentException
      */
     public function __construct(Configuration $configuration)
@@ -54,6 +56,7 @@ class Database
 
     /**
      * @param string $table
+     *
      * @return Query
      */
     public function getNewSelectQuery(string $table): Query
@@ -66,6 +69,7 @@ class Database
 
     /**
      * @param string $table
+     *
      * @return Query
      */
     public function getNewUpdateQuery(string $table): Query
@@ -78,6 +82,7 @@ class Database
 
     /**
      * @param string $table
+     *
      * @return Query
      */
     public function getNewInsertQuery(string $table): Query
@@ -90,6 +95,7 @@ class Database
 
     /**
      * @param string $table
+     *
      * @return Query
      */
     public function getNewDeleteQuery(string $table): Query
@@ -100,9 +106,22 @@ class Database
         return $query;
     }
 
+    /**
+     * @param string $table
+     *
+     * @return Query
+     */
+    public function getNewTruncatQuery(string $table): Query
+    {
+        $query = new Query($table);
+        $query->addType(Query::TRUNCATE);
+
+        return $query;
+    }
 
     /**
      * @param Query $query
+     *
      * @return array
      */
     public function fetchAll(Query $query): array
@@ -114,6 +133,7 @@ class Database
 
     /**
      * @param Query $query
+     *
      * @return mixed
      */
     public function fetch(Query $query)
@@ -125,6 +145,7 @@ class Database
 
     /**
      * @param Query $query
+     *
      * @return bool
      */
     public function execute(Query $query): bool

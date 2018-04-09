@@ -1,5 +1,4 @@
-<?php
-declare (strict_types=1);
+<?php declare (strict_types=1);
 
 namespace Project\Module\Database;
 
@@ -16,6 +15,7 @@ class Query
     public const UPDATE = 'UPDATE ';
     public const INSERT = 'INSERT INTO' . ' ';
     public const DELETE = 'DELETE ';
+    public const TRUNCATE = 'TRUNCATE ';
     public const FROM = 'FROM ';
     public const WHERE = 'WHERE ';
     public const AND = 'AND ';
@@ -39,6 +39,9 @@ class Query
     /** @var  string $where */
     protected $where;
 
+    /** @var array $andOr */
+    protected $andOr = [];
+
     /** @var  string $orderBy */
     protected $orderBy;
 
@@ -53,6 +56,7 @@ class Query
 
     /**
      * Query constructor.
+     *
      * @param string $table
      */
     public function __construct(string $table)
@@ -87,7 +91,7 @@ class Query
     /**
      * @param string $entity
      * @param string $operator
-     * @param $value
+     * @param        $value
      */
     public function where(string $entity, string $operator, $value): void
     {
@@ -101,7 +105,7 @@ class Query
     /**
      * @param string $entity
      * @param string $operator
-     * @param $value
+     * @param        $value
      */
     public function andWhere(string $entity, string $operator, $value): void
     {
@@ -115,7 +119,7 @@ class Query
     /**
      * @param string $entity
      * @param string $operator
-     * @param $value
+     * @param        $value
      */
     public function orWhere(string $entity, string $operator, $value): void
     {
@@ -128,7 +132,22 @@ class Query
 
     /**
      * @param string $entity
-     * @param null $value
+     * @param string $operator
+     * @param        $value
+     * @param bool   $asParam
+     */
+    public function andOrWhere(string $entity, string $operator, $value, bool $asParam = false): void
+    {
+        if (\is_string($value) === true && $asParam === false) {
+            $value = '\'' . $value . '\'';
+        }
+
+        $this->andOr[] = $entity . ' ' . $operator . ' ' . $value . ' ';
+    }
+
+    /**
+     * @param string $entity
+     * @param null   $value
      */
     public function set(string $entity, $value = null): void
     {
@@ -149,7 +168,7 @@ class Query
 
     /**
      * @param string $entity
-     * @param null $value
+     * @param null   $value
      */
     public function insert(string $entity, $value = null): void
     {
@@ -188,6 +207,8 @@ class Query
                 $queryString .= self::SELECT . $this->getEntities();
                 $queryString .= self::FROM . $this->getTables();
                 $queryString .= $this->where;
+                $queryString .= $this->getAndOr();
+
                 $queryString .= $this->orderBy;
                 $queryString .= $this->limit;
                 break;
@@ -203,6 +224,9 @@ class Query
             case self::DELETE:
                 $queryString .= self::DELETE . self::FROM . $this->getTables();
                 $queryString .= $this->where;
+                break;
+            case self::TRUNCATE:
+                $queryString .= self::TRUNCATE . $this->getTables();
                 break;
             default:
                 break;
@@ -223,6 +247,18 @@ class Query
         }
 
         return implode(',', $this->entityArray) . ' ';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getAndOr(): string
+    {
+        if (empty($this->andOr)) {
+            return '';
+        }
+
+        return 'AND (' . implode(self:: OR, $this->andOr) . ')';
     }
 
     /**
