@@ -53,7 +53,7 @@ class MailerService
             // Create the Mailer using your created Transport
             $this->mailer = new Swift_Mailer($this->transport);
         } else {
-            throw new \Exception('Mailer could not be initialized.');
+            throw new \InvalidArgumentException('Mailer could not be initialized.');
         }
 
         if ($logger === true) {
