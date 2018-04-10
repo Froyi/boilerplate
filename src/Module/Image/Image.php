@@ -1,21 +1,37 @@
 <?php
 declare (strict_types=1);
 
-namespace Project\Module\GenericValueObject;
+namespace Project\Module\Image;
 
 use claviska\SimpleImage;
+use Project\Module\DefaultModel;
 
 /**
  * Class Image
- * @package Project\Module\GenericValueObject
+ * @package Project\Module\Image
  */
-class Image extends DefaultGenericValueObject
+class Image extends DefaultModel
 {
+    /** @var string PATH_NEWS */
     public const PATH_NEWS = 'data/img/news/';
+
+    /** @var string PATH_ALBUM */
     public const PATH_ALBUM = 'data/img/galerie/';
 
+    /** @var int SAVE_QUALITY */
     protected const SAVE_QUALITY = 50;
+
+    /** @var int MAX_LENGTH */
     protected const MAX_LENGTH = 1200;
+
+    /** @var bool AUTO_ORIENTATION */
+    protected const AUTO_ORIENTATION = false;
+
+    /** @var bool FIT_TO_ORIENTATION */
+    protected const FIT_TO_ORIENTATION = false;
+
+    /** @var bool SHARPEN */
+    protected const SHARPEN = false;
 
     /** @var SimpleImage $image */
     protected $image;
@@ -36,16 +52,24 @@ class Image extends DefaultGenericValueObject
     protected function __construct(string $path)
     {
         $this->image = new SimpleImage($path);
-        $this->imagePath = $path;
-        $this->image->autoOrient();
 
-        if ($this->image->getAspectRatio() >= 1) {
-            $this->image->fitToWidth(self::MAX_LENGTH);
-        } else {
-            $this->image->fitToHeight(self::MAX_LENGTH);
+        $this->imagePath = $path;
+
+        if (self::AUTO_ORIENTATION === true) {
+            $this->image->autoOrient();
         }
 
-        $this->image->sharpen();
+        if (self::FIT_TO_ORIENTATION === true) {
+            if ($this->image->getAspectRatio() >= 1) {
+                $this->image->fitToWidth(self::MAX_LENGTH);
+            } else {
+                $this->image->fitToHeight(self::MAX_LENGTH);
+            }
+        }
+
+        if (self::SHARPEN === true) {
+            $this->image->sharpen();
+        }
     }
 
     /**
@@ -57,25 +81,6 @@ class Image extends DefaultGenericValueObject
     public static function fromFile(string $path): self
     {
         return new self($path);
-    }
-
-    /**
-     * @param array  $uploadedFile
-     * @param string $path
-     *
-     * @return null|Image
-     * @throws \Exception
-     */
-    public static function fromUploadWithSave(array $uploadedFile, string $path): ?self
-    {
-        $image = self::fromFile($uploadedFile['tmp_name']);
-        $filePath = $path . $uploadedFile['name'];
-
-        if ($image->saveToPath($filePath) === true) {
-            return $image;
-        }
-
-        return null;
     }
 
     /**
@@ -112,6 +117,7 @@ class Image extends DefaultGenericValueObject
 
     /**
      * @param string $path
+     *
      * @return bool
      * @throws \Exception
      */
