@@ -39,9 +39,6 @@ class Image extends DefaultModel
     /** @var string $imagePath */
     protected $imagePath;
 
-    /** @var  array $tempImage */
-    protected $tempImage;
-
     /**
      * Image constructor.
      *
@@ -86,7 +83,7 @@ class Image extends DefaultModel
     /**
      * @return string
      */
-    public function toString(): string
+    public function getImagePath(): string
     {
         return (string)$this->imagePath;
     }

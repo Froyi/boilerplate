@@ -9,6 +9,7 @@ return [
     'template' => [
         'name' => 'default',
         'dir' =>  '/default',
+        'main_css_path' => '/css/main.css'
     ],
     'database' => [
         'host' => ConfigurationInterface::DEFAULT_SERVER,

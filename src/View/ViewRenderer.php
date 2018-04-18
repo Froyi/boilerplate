@@ -44,7 +44,10 @@ class ViewRenderer
 
         $this->addViewFilter();
 
-        $this->addViewConfig('templateDir', 'templates/' . $this->templateName);
+        $templateDir = 'templates/' . $this->templateName;
+
+        $this->addViewConfig('templateDir', $templateDir);
+        $this->addViewConfig('mainCssPath', $templateDir . $template['main_css_path']);
     }
 
     /**
