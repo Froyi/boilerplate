@@ -49,7 +49,8 @@ class MailerService
             $this->mailerConfiguration = $mailConfiguration;
 
             // Create the Transport
-            $this->transport = (new Swift_SmtpTransport($this->mailerConfiguration['server'], $this->mailerConfiguration['port']))->setUsername($this->mailerConfiguration['user'])->setPassword($this->mailerConfiguration['password']);
+            $this->transport = (new Swift_SmtpTransport($this->mailerConfiguration['server'],
+                $this->mailerConfiguration['port']))->setUsername($this->mailerConfiguration['user'])->setPassword($this->mailerConfiguration['password']);
             // Create the Mailer using your created Transport
             $this->mailer = new Swift_Mailer($this->transport);
         } else {
@@ -62,27 +63,28 @@ class MailerService
     }
 
     /**
-     * @param Email $to
-     * @param       $subject
-     * @param       $message
+     * @param Email       $to
+     * @param MailSubject $subject
+     * @param MailMessage $message
      *
      * @return bool
      */
-    public function sendSingleStandardMail(Email $to, $subject, $message): bool
+    public function sendSingleStandardMail(Email $to, MailSubject $subject, MailMessage $message): bool
     {
         // Create a message
-        $message = $this->buildMessage($to, $subject, $message);
+        /** @var Swift_Message $mailMessage */
+        $mailMessage = $this->buildMessage($to, $subject, $message);
 
-        if ($this->mailer->send($message, $this->errors) === false) {
+        if ($this->mailer->send($mailMessage, $this->errors) !== false) {
             if ($this->logger !== null) {
-                echo "Error:" . $this->logger->dump();
+                echo 'Success';
+            }
+        } else {
+            if ($this->logger !== null) {
+                echo 'Error:' . $this->logger->dump();
             }
 
             return false;
-        } else {
-            if ($this->logger !== null) {
-                echo "Success";
-            }
         }
 
         return true;
@@ -91,31 +93,31 @@ class MailerService
     /**
      * register logger for debugging
      */
-    protected function registerLogger()
+    protected function registerLogger(): void
     {
         $this->logger = new \Swift_Plugins_Loggers_ArrayLogger();
         $this->mailer->registerPlugin(new \Swift_Plugins_LoggerPlugin($this->logger));
     }
 
     /**
-     * @param Email $to
-     * @param       $subject
-     * @param       $message
+     * @param Email       $to
+     * @param MailSubject $subject
+     * @param MailMessage $message
      *
      * @return Swift_Message
      */
-    protected function buildMessage(Email $to, $subject, $message): Swift_Message
+    protected function buildMessage(Email $to, MailSubject $subject, MailMessage $message): Swift_Message
     {
         $standardMailName = null;
         if (empty($this->mailerConfiguration['standard_from_name']) === false) {
             $standardMailName = $this->mailerConfiguration['standard_from_name'];
         }
 
-        $swiftMessage = new Swift_Message($subject);
+        $swiftMessage = new Swift_Message($subject->getSubject());
 
         $swiftMessage->setFrom([$this->mailerConfiguration['standard_from_mail'] => $standardMailName]);
         $swiftMessage->setTo($to->getEmail());
-        $swiftMessage->setBody($message);
+        $swiftMessage->setBody($message->getMessage());
 
         return $swiftMessage;
     }
