@@ -1,0 +1,34 @@
+.banderole(@color-front: #000000, @color-back: #ffffff) {
+    width: 658px;
+    height: 50px;
+    margin-left: -31px;
+    margin-top: -10px;
+    background-color: @color-back;
+    z-index: 2;
+    position: relative;
+
+    &:before, &:after {
+        content: "";
+        position: absolute;
+        display: block;
+        border-style: solid;
+        border-color: @color-front transparent transparent transparent;
+        bottom: -1em;
+    }
+
+    &:before {
+        left: 0;
+        border-width: 1em 0 0 1em;
+    }
+
+    &:after {
+        right: 0;
+        border-width: 1em 1em 0 0;
+    }
+
+    h1 {
+        text-align: center;
+        color: @color-2;
+        line-height: 50px;
+    }
+}

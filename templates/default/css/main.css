@@ -385,6 +385,72 @@ template {
 [hidden] {
   display: none;
 }
-h1 {
-  background-color: #ffffff;
+@font-face {
+  font-family: 'soria';
+  src: url('../font/soria-font.ttf');
 }
+* {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  font-size: 1em;
+  color: #000000;
+}
+body {
+  /*background: url('@{basic-path}img/bg.jpg') @color-1 no-repeat;
+    background-attachment: fixed;*/
+}
+a {
+  text-decoration: none;
+}
+.content-main-wrapper {
+  width: 1100px;
+  position: relative;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.clear {
+  clear: both;
+  margin: 0;
+  padding: 0;
+  height: 0;
+}
+.banderole {
+  width: 658px;
+  height: 50px;
+  margin-left: -31px;
+  margin-top: -10px;
+  background-color: #000000;
+  z-index: 2;
+  position: relative;
+}
+.banderole:before,
+.banderole:after {
+  content: "";
+  position: absolute;
+  display: block;
+  border-style: solid;
+  border-color: #ffffff transparent transparent transparent;
+  bottom: -1em;
+}
+.banderole:before {
+  left: 0;
+  border-width: 1em 0 0 1em;
+}
+.banderole:after {
+  right: 0;
+  border-width: 1em 1em 0 0;
+}
+.banderole h1 {
+  text-align: center;
+  color: #ffffff;
+  line-height: 50px;
+}
+.invisible {
+  display: none;
+}
+.flex {
+  display: flex;
+  justify-content: space-between;
+}
+/*# sourceMappingURL=main.css.map */
