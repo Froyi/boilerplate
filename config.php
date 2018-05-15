@@ -11,13 +11,13 @@ return [
         'dir' =>  '/default',
         'main_css_path' => '/css/main.css'
     ],
-    'database' => [
+    'database_live' => [
         'host' => ConfigurationInterface::DEFAULT_SERVER,
         ConfigurationInterface::USER => 'web1061',
         ConfigurationInterface::PASS => 'EB57l0Kq',
         'database_name' => 'usr_web1061_1'
     ],
-    'database_local' => [
+    'database' => [
         'host' => ConfigurationInterface::DEFAULT_SERVER,
         ConfigurationInterface::USER => 'root',
         ConfigurationInterface::PASS => '',
