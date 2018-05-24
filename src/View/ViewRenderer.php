@@ -5,6 +5,7 @@ namespace Project\View;
 
 use Project\Configuration;
 use Project\Utilities\Converter;
+use Project\Utilities\Tools;
 use Project\View\ValueObject\TemplateDir;
 
 /**
@@ -78,6 +79,18 @@ class ViewRenderer
         });
 
         $this->viewRenderer->addFilter($weekDayShortFilter);
+
+        $routeFilter = new \Twig_SimpleFunction('route', function (string $route = '', $parameter = []) {
+            return Tools::getRouteUrl($route, $parameter);
+        });
+
+        $this->viewRenderer->addFunction($routeFilter);
+
+        $shortenFilter = new \Twig_SimpleFunction('shortener', function (string $text = '', int $amount = 50, bool $points = true) {
+            return Tools::shortener($text, $amount, $points);
+        });
+
+        $this->viewRenderer->addFunction($shortenFilter);
     }
 
     /**
