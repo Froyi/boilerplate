@@ -22,7 +22,8 @@
     "league/uri": "5.*",
     "claviska/simpleimage": "3.*",
     "tinify/tinify": "1.*",
-    "swiftmailer/swiftmailer": "6.*"
+    "swiftmailer/swiftmailer": "6.*",
+    "phpunit/php-timer": "2.*"
   },
   "autoload": {
     "psr-4": {
