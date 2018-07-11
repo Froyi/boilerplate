@@ -9,7 +9,7 @@ namespace Project\Module\GenericValueObject;
  */
 class Seats extends DefaultGenericValueObject
 {
-    const SEATS_MIN = 1;
+    protected const SEATS_MIN = 1;
 
     /** @var int $seats */
     protected $seats;

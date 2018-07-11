@@ -39,7 +39,7 @@ class Password extends DefaultGenericValueObject
      */
     protected static function ensurePasswordIsValid(string $password): void
     {
-        if (strlen($password) < 5) {
+        if (\strlen($password) < 5) {
             throw new \InvalidArgumentException('Dieser password ist zu kurz!', 1);
         }
 

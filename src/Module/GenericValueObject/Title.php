@@ -9,7 +9,7 @@ namespace Project\Module\GenericValueObject;
  */
 class Title extends DefaultGenericValueObject
 {
-    const TITLE_MIN_LENGTH = 5;
+    protected const TITLE_MIN_LENGTH = 5;
 
     /** @var string $title */
     protected $title;
@@ -42,7 +42,7 @@ class Title extends DefaultGenericValueObject
      */
     protected static function ensureTitleIsValid(string $title): void
     {
-        if (strlen($title) < self::TITLE_MIN_LENGTH) {
+        if (\strlen($title) < self::TITLE_MIN_LENGTH) {
             throw new \InvalidArgumentException('The title is too short', 1);
         }
     }

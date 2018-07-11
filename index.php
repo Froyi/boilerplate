@@ -5,7 +5,7 @@ namespace Project;
 use Project\Controller\IndexController;
 use Project\Utilities\Tools;
 
-define('ROOT_PATH', getcwd());
+\define('ROOT_PATH', getcwd());
 
 require ROOT_PATH . '/vendor/autoload.php';
 

@@ -5,6 +5,7 @@ namespace Project\Controller;
 
 use Project\Configuration;
 use Project\Module\Database\Database;
+use Project\Module\Notification\NotificationService;
 use Project\Service\JsPluginService;
 use Project\View\ViewRenderer;
 
@@ -20,6 +21,9 @@ class DefaultController
     /** @var Configuration $configuration */
     protected $configuration;
 
+    /** @var NotificationService $notificationService */
+    protected $notificationService;
+
     /** @var Database $database */
     protected $database;
 
@@ -31,10 +35,10 @@ class DefaultController
      */
     public function __construct(Configuration $configuration, string $routeName)
     {
-        /** @var Configuration configuration */
         $this->configuration = $configuration;
         $this->viewRenderer = new ViewRenderer($this->configuration);
         $this->database = new Database($this->configuration);
+        $this->notificationService = new NotificationService();
 
         $this->setDefaultViewConfig();
 
@@ -47,6 +51,13 @@ class DefaultController
     protected function setDefaultViewConfig(): void
     {
         $this->viewRenderer->addViewConfig('page', 'notfound');
+
+        /**
+         * Notifications
+         */
+        $notifications = $this->notificationService->getNotifications(false);
+
+        $this->viewRenderer->addViewConfig('notifications', $notifications);
     }
 
     /**

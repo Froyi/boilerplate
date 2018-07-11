@@ -42,7 +42,7 @@ class TemplateDir
      */
     protected static function ensureValueIsValid(string $templateDir): void
     {
-        if (strlen($templateDir) < 3) {
+        if (\strlen($templateDir) < 3) {
             throw new \InvalidArgumentException('this template dir is too short ... minimum three chars');
         }
     }

@@ -453,4 +453,24 @@ a {
   display: flex;
   justify-content: space-between;
 }
+.notification-container {
+  position: absolute;
+  width: 100%;
+  cursor: pointer;
+  top: 0;
+}
+.notification-container .notification {
+  padding: 20px;
+  font-size: 1em;
+  color: #ffffff;
+  text-align: center;
+}
+.notification-container .notification.alert,
+.notification-container .notification.error {
+  background-color: rgba(205, 43, 43, 0.9);
+}
+.notification-container .notification.info,
+.notification-container .notification.success {
+  background-color: rgba(93, 233, 107, 0.9);
+}
 /*# sourceMappingURL=main.css.map */

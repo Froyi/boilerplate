@@ -1,0 +1,9 @@
+{% if notifications %}
+    <div class="notification-container js-notification-container">
+        {% for notification in notifications %}
+            <div class="notification js-notification {{ notification.getLevel }}">
+                {{ notification.getMessage }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

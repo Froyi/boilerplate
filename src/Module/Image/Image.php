@@ -48,6 +48,8 @@ class Image extends DefaultModel
      */
     protected function __construct(string $path)
     {
+        parent::__construct();
+
         $this->image = new SimpleImage($path);
 
         $this->imagePath = $path;

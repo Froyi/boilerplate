@@ -9,7 +9,7 @@ namespace Project\Module\GenericValueObject;
  */
 class PasswordHash extends DefaultGenericValueObject
 {
-    const CRYPTER = PASSWORD_BCRYPT;
+    protected const CRYPTER = PASSWORD_BCRYPT;
 
     /** @var string $passwordHash */
     protected $passwordHash;
@@ -59,7 +59,7 @@ class PasswordHash extends DefaultGenericValueObject
      */
     protected static function ensurePasswordHashIsValid(string $passwordHash): void
     {
-        if (strlen($passwordHash) !== 60) {
+        if (\strlen($passwordHash) !== 60) {
             throw new \InvalidArgumentException('Dieser PasswordHash ist nicht valide!', 1);
         }
     }
