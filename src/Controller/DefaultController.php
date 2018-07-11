@@ -31,6 +31,7 @@ class DefaultController
      */
     public function __construct(Configuration $configuration, string $routeName)
     {
+        /** @var Configuration configuration */
         $this->configuration = $configuration;
         $this->viewRenderer = new ViewRenderer($this->configuration);
         $this->database = new Database($this->configuration);
