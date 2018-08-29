@@ -14,12 +14,14 @@ class Configuration
 
     protected const JS_CONFIG_PATH = ROOT_PATH . '/config-js.php';
 
+    protected const ENV_CONFIG_PATH = ROOT_PATH . '/config-env.php';
+
     protected const CONFIG_LIST = [
         'default' => self::DEFAULT_CONFIG_PATH,
         'route' => self::ROUTE_CONFIG_PATH,
-        'js' => self::JS_CONFIG_PATH
+        'js' => self::JS_CONFIG_PATH,
+        'env' => self::ENV_CONFIG_PATH
     ];
-
 
     /** @var array $configuration */
     protected $configuration;
@@ -32,6 +34,7 @@ class Configuration
         $this->configuration = [];
 
         foreach(self::CONFIG_LIST as $config) {
+            /** @noinspection SlowArrayOperationsInLoopInspection */
             $this->configuration = array_merge($this->configuration, include $config);
         }
     }

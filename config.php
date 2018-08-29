@@ -11,18 +11,6 @@ return [
         'dir' =>  '/default',
         'main_css_path' => '/css/main.css'
     ],
-    'database_live' => [
-        'host' => ConfigurationInterface::DEFAULT_SERVER,
-        ConfigurationInterface::USER => 'web1061',
-        ConfigurationInterface::PASS => 'EB57l0Kq',
-        'database_name' => 'usr_web1061_1'
-    ],
-    'database' => [
-        'host' => ConfigurationInterface::DEFAULT_SERVER,
-        ConfigurationInterface::USER => 'root',
-        ConfigurationInterface::PASS => '',
-        'database_name' => 'boilerplate'
-    ],
     'controller' => [
         'namespace' => 'Controller'
     ],
