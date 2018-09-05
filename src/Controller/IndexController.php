@@ -27,7 +27,7 @@ class IndexController extends DefaultController
      * @throws \InvalidArgumentException
      * @throws \Twig_Error_Syntax
      */
-    public function differentIndexAcion(): void
+    public function differentIndexAction(): void
     {
         try {
             $this->viewRenderer->addViewConfig('slider', 'sliderVariable');
