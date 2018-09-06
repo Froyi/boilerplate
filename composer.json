@@ -1,5 +1,5 @@
 {
-  "name": "php-boilerplate",
+  "name": "Froyi/php-boilerplate",
   "description": "This is my boilerplate for every small project.",
   "type": "website",
   "keywords": [
@@ -8,7 +8,7 @@
   "license": "MIT",
   "authors": [
     {
-      "name": "Maik Schößler",
+      "name": "Froyi",
       "email": "ms2002@onlinehome.de"
     }
   ],
