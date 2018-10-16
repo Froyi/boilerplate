@@ -4,7 +4,7 @@ return [
         'fancybox' => '/js/fancybox.min.js',
         'ckeditor' => '/ckeditor/ckeditor.js',
         'responsive-slides' => '/js/responsiveSlides.min.js',
-        'jquery' => '/js/jquery-3.2.1.min.js',
+        'jquery' => '/js/jquery.min.js',
         'pageslide' => '/js/jquery.pageslide.min.js',
         'main' => '/js/main.js',
     ],

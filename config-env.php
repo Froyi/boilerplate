@@ -15,4 +15,5 @@ return [
         ConfigurationInterface::PASS => '',
         'database_name' => 'boilerplate'
     ],
+    'environment' => 'develop'
 ];

@@ -13,21 +13,26 @@
     }
   ],
   "require-dev": {
-    "roave/security-advisories": "dev-master"
+    "roave/security-advisories": "dev-master",
+    "phpunit/phpunit": "^7",
+    "phpunit/php-timer": "2.*",
+    "tracy/tracy": "^2.5"
   },
   "require": {
     "php": "^7.0",
-    "twig/twig": "2.4.3",
-    "ramsey/uuid": "3.6.1",
-    "league/uri": "5.*",
+    "twig/twig": "2.5",
+    "ramsey/uuid": "3.8.*",
     "claviska/simpleimage": "3.*",
     "tinify/tinify": "1.*",
     "swiftmailer/swiftmailer": "6.*",
-    "phpunit/php-timer": "2.*"
+    "endroid/qr-code": "^3.4"
   },
   "autoload": {
     "psr-4": {
       "Project\\": "src/"
     }
+  },
+  "config": {
+    "sort-packages": true
   }
 }
