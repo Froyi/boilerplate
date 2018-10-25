@@ -59,13 +59,13 @@ class Name extends DefaultGenericValueObject
             $names = explode('-', $name);
 
             foreach ($names as $key => $lastname) {
-                $lastname = ucwords(strtolower(trim($lastname)));
+                $lastname = ucwords(mb_strtolower(trim($lastname)));
                 $names[$key] = $lastname;
             }
 
             $name = implode('-', $names);
         } else {
-            $name = ucwords(strtolower(trim($name)));
+            $name = ucwords(mb_strtolower(trim($name)));
         }
 
         return $name;
