@@ -3,13 +3,16 @@ declare (strict_types=1);
 
 namespace Project\Module\GenericValueObject;
 
+use InvalidArgumentException;
+use function strlen;
+
 /**
  * Class Text
  * @package Project\Module\GenericValueObject
  */
 class Text extends DefaultGenericValueObject
 {
-    protected const MIN_TEXT_LENGTH = 50;
+    protected const MIN_TEXT_LENGTH = 20;
 
     /** @var string $text */
     protected $text;
@@ -26,7 +29,6 @@ class Text extends DefaultGenericValueObject
     /**
      * @param string $text
      * @return Text
-     * @throws \InvalidArgumentException
      */
     public static function fromString(string $text): self
     {
@@ -38,12 +40,11 @@ class Text extends DefaultGenericValueObject
 
     /**
      * @param string $text
-     * @throws \InvalidArgumentException
      */
     protected static function ensureTextIsValid(string $text): void
     {
-        if (\strlen($text) < self::MIN_TEXT_LENGTH) {
-            throw new \InvalidArgumentException('The text is not long enough.', 1);
+        if (strlen($text) < self::MIN_TEXT_LENGTH) {
+            throw new InvalidArgumentException('The text is not long enough.', 1);
         }
     }
 

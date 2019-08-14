@@ -2,13 +2,15 @@
 
 namespace Project\Module\Notification;
 
+use InvalidArgumentException;
+use Project\Module\DefaultFactory;
 use Project\Module\GenericValueObject\Message;
 
 /**
  * Class NotificationFactory
  * @package     Project\Module\Notification
  */
-class NotificationFactory
+class NotificationFactory extends DefaultFactory
 {
     /**
      * @param $object
@@ -20,14 +22,22 @@ class NotificationFactory
         return $this->getNotification($object->level, $object->message);
     }
 
-    public function getNotification(string $level, string $message): ?Notification
+    /**
+     * @param string $levelString
+     * @param string $messageString
+     *
+     * @return null|Notification
+     */
+    public function getNotification(string $levelString, string $messageString): ?Notification
     {
         try {
-            $level = Level::fromString($level);
-            $message = Message::fromString($message);
+            $level = Level::fromString($levelString);
+            $message = Message::fromString($messageString);
 
             return new Notification($level, $message);
-        } catch (\InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException $exception) {
+            $this->logger->addCritical('NotificationFactory: ' . $exception->getMessage());
+
             return null;
         }
     }

@@ -3,6 +3,9 @@ declare (strict_types=1);
 
 namespace Project\Module\GenericValueObject;
 
+use InvalidArgumentException;
+use function strlen;
+
 /**
  * Class PasswordHash
  * @package Project\Module\GenericValueObject
@@ -35,7 +38,6 @@ class PasswordHash extends DefaultGenericValueObject
     /**
      * @param string $passwordHash
      * @return PasswordHash
-     * @throws \InvalidArgumentException
      */
     public static function fromString(string $passwordHash): self
     {
@@ -55,12 +57,11 @@ class PasswordHash extends DefaultGenericValueObject
 
     /**
      * @param string $passwordHash
-     * @throws \InvalidArgumentException
      */
     protected static function ensurePasswordHashIsValid(string $passwordHash): void
     {
-        if (\strlen($passwordHash) !== 60) {
-            throw new \InvalidArgumentException('Dieser PasswordHash ist nicht valide!', 1);
+        if (strlen($passwordHash) !== 60) {
+            throw new InvalidArgumentException('Dieser PasswordHash ist nicht valide!', 1);
         }
     }
 

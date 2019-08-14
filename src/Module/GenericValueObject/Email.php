@@ -3,6 +3,8 @@ declare (strict_types=1);
 
 namespace Project\Module\GenericValueObject;
 
+use InvalidArgumentException;
+
 /**
  * Class Email
  * @package Project\Module\GenericValueObject
@@ -17,12 +19,13 @@ class Email extends DefaultGenericValueObject
     /**
      * @param string $email
      * @return Email
-     * @throws \InvalidArgumentException
      */
     public static function fromString(string $email): self
     {
+        $email = mb_strtolower(trim($email));
+
         if (self::isValidEmail($email) === false) {
-            throw new \InvalidArgumentException('This Email is not valid.');
+            throw new InvalidArgumentException('This Email is not valid.');
         }
 
         return new self($email);

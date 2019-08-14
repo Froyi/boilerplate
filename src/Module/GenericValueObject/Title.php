@@ -3,6 +3,9 @@ declare (strict_types=1);
 
 namespace Project\Module\GenericValueObject;
 
+use InvalidArgumentException;
+use function strlen;
+
 /**
  * Class Title
  * @package Project\Module\GenericValueObject
@@ -26,7 +29,6 @@ class Title extends DefaultGenericValueObject
     /**
      * @param string $title
      * @return Title
-     * @throws \InvalidArgumentException
      */
     public static function fromString(string $title): self
     {
@@ -38,12 +40,11 @@ class Title extends DefaultGenericValueObject
 
     /**
      * @param string $title
-     * @throws \InvalidArgumentException
      */
     protected static function ensureTitleIsValid(string $title): void
     {
-        if (\strlen($title) < self::TITLE_MIN_LENGTH) {
-            throw new \InvalidArgumentException('The title is too short', 1);
+        if (strlen($title) < self::TITLE_MIN_LENGTH) {
+            throw new InvalidArgumentException('The title is too short', 1);
         }
     }
 

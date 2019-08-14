@@ -28,4 +28,9 @@ interface DatetimeInterface extends DateInterface
      * @return string
      */
     public function getTimeString(): string;
+
+    /**
+     * @return string
+     */
+    public function getDbFormat(): string;
 }

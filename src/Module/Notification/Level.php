@@ -2,6 +2,8 @@
 
 namespace Project\Module\Notification;
 
+use function in_array;
+use InvalidArgumentException;
 use Project\Module\GenericValueObject\DefaultGenericValueObject;
 
 /**
@@ -37,7 +39,7 @@ class Level extends DefaultGenericValueObject
      * @param string $level
      *
      * @return Level
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public static function fromString(string $level): self
     {
@@ -59,12 +61,12 @@ class Level extends DefaultGenericValueObject
     /**
      * @param string $level
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected static function ensureLevelIsValid(string $level): void
     {
-        if (\in_array($level, self::VALID_LEVELS, true) === false) {
-            throw new \InvalidArgumentException('This level is not valid: ' . $level);
+        if (in_array($level, self::VALID_LEVELS, true) === false) {
+            throw new InvalidArgumentException('This level is not valid: ' . $level);
         }
     }
 

@@ -15,12 +15,24 @@ class Date extends AbstractDatetime implements DateInterface
 
     public const WEEKDAY_FORMAT = 'w';
 
+    public const YEAR_FORMAT = 'Y';
+
+    public const DAY_MONTH = 'dm';
+
     /**
      * @return string
      */
     public function __toString(): string
     {
         return (string) date(self::DATE_OUTPUT_FORMAT, $this->datetime);
+    }
+
+    /**
+     * @return string
+     */
+    public function getOutputFormat(): string
+    {
+        return (string)date(self::DATE_OUTPUT_FORMAT, $this->datetime);
     }
 
     /**
@@ -39,6 +51,13 @@ class Date extends AbstractDatetime implements DateInterface
         return (int) date(self::WEEKDAY_FORMAT, $this->datetime);
     }
 
+    /**
+     * @return int
+     */
+    public function getYear(): int
+    {
+        return (int)date(self::YEAR_FORMAT, $this->datetime);
+    }
 
     /**
      * @param int $days
@@ -47,5 +66,33 @@ class Date extends AbstractDatetime implements DateInterface
     public function isOlderThanDays(int $days): bool
     {
         return ($this->datetime < strtotime('-' . $days . ' days'));
+    }
+
+    /**
+     * @param Date $date
+     *
+     * @return bool
+     */
+    public function isSameOrOlderThan(Date $date): bool
+    {
+        return ($this->toString() <= $date->toString());
+    }
+
+    /**
+     * @param Date $date
+     *
+     * @return bool
+     */
+    public function isOlderThan(Date $date): bool
+    {
+        return ($this->toString() < $date->toString());
+    }
+
+    /**
+     * @return int
+     */
+    public function getDayAndMonth(): int
+    {
+        return (int)date(self::DAY_MONTH, $this->datetime);
     }
 }

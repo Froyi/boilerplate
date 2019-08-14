@@ -2,6 +2,10 @@
 
 namespace Project\Module\Database;
 
+use function is_bool;
+use function is_string;
+use UnexpectedValueException;
+
 /**
  * Class Query
  *
@@ -22,6 +26,7 @@ class Query
     public const OR = 'OR ';
     public const LIMIT = 'LIMIT ';
     public const ORDERBY = 'ORDER BY ';
+    public const ORDER_RAND = 'RAND() ';
     public const ASC = 'ASC';
     public const DESC = 'DESC';
     public const SET = 'SET ';
@@ -53,6 +58,9 @@ class Query
 
     /** @var array $insert */
     protected $insert = [];
+
+    /** @var null|string */
+    protected $query;
 
     /**
      * Query constructor.
@@ -95,8 +103,15 @@ class Query
      */
     public function where(string $entity, string $operator, $value): void
     {
-        if (\is_string($value) === true) {
-            $value = '\'' . $value . '\'';
+        if (is_bool($value) === true){
+            $value = (int)$value;
+        }
+
+        if ($value === null) {
+            $operator = 'is';
+            $value = 'NULL';
+        } else if (is_string($value) === true && $value !== 'NULL') {
+            $value = '\'' . addslashes($value) . '\'';
         }
 
         $this->where .= self::WHERE . $entity . ' ' . $operator . ' ' . $value . ' ';
@@ -109,7 +124,11 @@ class Query
      */
     public function andWhere(string $entity, string $operator, $value): void
     {
-        if (\is_string($value) === true) {
+        if (is_bool($value) === true){
+            $value = (int)$value;
+        }
+
+        if (is_string($value) === true && $value !== 'NULL') {
             $value = '\'' . $value . '\'';
         }
 
@@ -123,7 +142,11 @@ class Query
      */
     public function orWhere(string $entity, string $operator, $value): void
     {
-        if (\is_string($value) === true) {
+        if (is_bool($value) === true){
+            $value = (int)$value;
+        }
+
+        if (is_string($value) === true) {
             $value = '\'' . $value . '\'';
         }
 
@@ -134,11 +157,15 @@ class Query
      * @param string $entity
      * @param string $operator
      * @param        $value
-     * @param bool   $asParam
+     * @param bool $asParam
      */
     public function andOrWhere(string $entity, string $operator, $value, bool $asParam = false): void
     {
-        if (\is_string($value) === true && $asParam === false) {
+        if (is_bool($value) === true){
+            $value = (int)$value;
+        }
+
+        if (is_string($value) === true && $asParam === false) {
             $value = '\'' . $value . '\'';
         }
 
@@ -147,12 +174,16 @@ class Query
 
     /**
      * @param string $entity
-     * @param null   $value
+     * @param null $value
      */
     public function set(string $entity, $value = null): void
     {
-        if ($value !== null && \is_string($value) === true) {
-            $value = '\'' . $value . '\'';
+        if (is_bool($value) === true){
+            $value = (int)$value;
+        }
+
+        if ($value !== null && is_string($value) === true) {
+            $value = '\'' . addslashes($value) . '\'';
         }
 
         if (!empty($this->set)) {
@@ -168,10 +199,13 @@ class Query
 
     /**
      * @param string $entity
-     * @param null   $value
+     * @param null $value
      */
     public function insert(string $entity, $value = null): void
     {
+        if (is_bool($value) === true){
+            $value = (int)$value;
+        }
         if (!isset($this->insert[$entity])) {
             $this->insert[$entity] = $value;
         }
@@ -196,43 +230,65 @@ class Query
 
     /**
      * @return string
-     * @throws \RuntimeException
      */
     public function getQuery(): string
     {
         $queryString = '';
 
-        switch ($this->type) {
-            case self::SELECT:
-                $queryString .= self::SELECT . $this->getEntities();
-                $queryString .= self::FROM . $this->getTables();
-                $queryString .= $this->where;
-                $queryString .= $this->getAndOr();
+        try {
+            switch ($this->type) {
+                case self::SELECT:
+                    $queryString .= self::SELECT . $this->getEntities();
+                    $queryString .= self::FROM . $this->getTables();
+                    $queryString .= $this->where;
+                    $queryString .= $this->getAndOr();
 
-                $queryString .= $this->orderBy;
-                $queryString .= $this->limit;
-                break;
-            case self::UPDATE:
-                $queryString .= self::UPDATE . $this->getTables();
-                $queryString .= self::SET . $this->set;
-                $queryString .= $this->where;
-                break;
-            case self::INSERT:
-                $queryString .= self::INSERT . $this->getTables();
-                $queryString .= $this->getInserts();
-                break;
-            case self::DELETE:
-                $queryString .= self::DELETE . self::FROM . $this->getTables();
-                $queryString .= $this->where;
-                break;
-            case self::TRUNCATE:
-                $queryString .= self::TRUNCATE . $this->getTables();
-                break;
-            default:
-                break;
+                    $queryString .= $this->orderBy;
+                    $queryString .= $this->limit;
+                    break;
+                case self::UPDATE:
+                    $queryString .= self::UPDATE . $this->getTables();
+                    $queryString .= self::SET . $this->set;
+                    $queryString .= $this->where;
+                    break;
+                case self::INSERT:
+                    $queryString .= self::INSERT . $this->getTables();
+                    $queryString .= $this->getInserts();
+                    break;
+                case self::DELETE:
+                    $queryString .= self::DELETE . self::FROM . $this->getTables();
+                    $queryString .= $this->where;
+                    break;
+                case self::TRUNCATE:
+                    $queryString .= self::TRUNCATE . $this->getTables();
+                    break;
+                default:
+                    break;
+            }
+
+            return $queryString;
+        } catch (UnexpectedValueException $exception) {
+            // maybe logging
+
+            return '';
         }
+    }
 
-        return $queryString;
+    /**
+     * @param string $query
+     *
+     * @return Query
+     */
+    public function setQuery(string $query): self
+    {
+        $this->query = $query;
+
+        return $this;
+    }
+
+    public function orderRandom(): void
+    {
+        $this->orderBy = self::ORDERBY . self::ORDER_RAND;
     }
 
     /**
@@ -263,12 +319,12 @@ class Query
 
     /**
      * @return string
-     * @throws \RuntimeException
+     * @throws UnexpectedValueException
      */
     protected function getTables(): string
     {
         if (empty($this->tableArray)) {
-            throw new \UnexpectedValueException('Es wurde keine Tabelle angegeben!');
+            throw new UnexpectedValueException('Es wurde keine Tabelle angegeben!');
         }
 
         return implode(',', $this->tableArray) . ' ';
@@ -289,8 +345,8 @@ class Query
 
             $entities .= $entity;
 
-            if (\is_string($value) === true) {
-                $value = '\'' . $value . '\'';
+            if (is_string($value) === true) {
+                $value = '\'' . addslashes($value) . '\'';
             }
 
             if ($value === null) {

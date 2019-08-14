@@ -10,7 +10,7 @@ use Project\View\JsonModel;
  * @package     Project\Controller
  * @copyright   Copyright (c) 2018 Maik Schößler
  */
-class JsonController extends DefaultController
+class JsonController extends DefaultViewController
 {
     /** @var JsonModel $jsonModel */
     protected $jsonModel;
@@ -26,5 +26,18 @@ class JsonController extends DefaultController
         parent::__construct($configuration, $routeName);
 
         $this->jsonModel = new JsonModel();
+    }
+
+    /**
+     * Example Action
+     *
+     * Beispiel, wie ein JSON Response aussehen kann.
+     *
+     */
+    public function exampleAction(): void
+    {
+        $this->jsonModel->addJsonConfig('test', 'hello');
+
+        $this->jsonModel->send();
     }
 }

@@ -20,6 +20,7 @@ return [
         ConfigurationInterface::USER => 'web1061p1',
         ConfigurationInterface::PASS => 'j5q9hCZp',
         'standard_from_mail' => 'test@boilerplate.ms2002.alfahosting.org',
-        'standard_from_name' => 'John Doe'
+        'standard_from_name' => 'John Doe',
+        'logger_send_adress' => 'error@boilerplate.de'
     ]
 ];

@@ -2,8 +2,14 @@
 
 namespace Project\Module\Mailer;
 
+use InvalidArgumentException;
 use Project\Configuration;
+use Project\Content;
 use Project\Module\GenericValueObject\Email;
+use Project\Module\GenericValueObject\Text;
+use Project\Module\GenericValueObject\Title;
+use Project\Service\Logger;
+use Swift_Attachment;
 use Swift_Mailer;
 use Swift_Message;
 use Swift_SmtpTransport;
@@ -30,94 +36,146 @@ class MailerService
     /** @var array $errors */
     protected $errors;
 
-    /** @var \Swift_Plugins_Loggers_ArrayLogger $logger */
+    /** @var null | Logger $logger */
     protected $logger;
+
+    /** @var Content $content */
+    protected $content;
+
+    /** @var Configuration $configuration */
+    protected $configuration;
 
     /**
      * MailerService constructor.
      *
      * @param Configuration $configuration
-     * @param bool          $logger
+     * @param Content       $content
      *
-     * @throws \Exception
+     * @param bool          $useLogger
      */
-    public function __construct(Configuration $configuration, bool $logger = false)
+    public function __construct(Configuration $configuration, Content $content, bool $useLogger = true)
     {
         $mailConfiguration = $configuration->getEntryByName(self::MAILER_CONFIG_KEY);
+
+        $this->configuration = $configuration;
 
         if ($this->validateMailerConfig($mailConfiguration) === true) {
             $this->mailerConfiguration = $mailConfiguration;
 
             // Create the Transport
-            $this->transport = (new Swift_SmtpTransport($this->mailerConfiguration['server'],
-                $this->mailerConfiguration['port']))->setUsername($this->mailerConfiguration['user'])->setPassword($this->mailerConfiguration['password']);
+            $this->transport = (new Swift_SmtpTransport($this->mailerConfiguration['server'], $this->mailerConfiguration['port']))->setUsername($this->mailerConfiguration['user'])->setPassword($this->mailerConfiguration['password']);
+
             // Create the Mailer using your created Transport
             $this->mailer = new Swift_Mailer($this->transport);
         } else {
-            throw new \InvalidArgumentException('Mailer could not be initialized.');
+            throw new InvalidArgumentException('Mailer could not be initialized.');
         }
 
-        if ($logger === true) {
-            $this->registerLogger();
+        $this->content = $content;
+
+        if ($useLogger === true) {
+            $this->logger = Logger::getInstance();
         }
     }
 
     /**
      * @param Email       $to
-     * @param MailSubject $subject
-     * @param MailMessage $message
+     * @param Title       $subject
+     * @param Text        $message
+     * @param string|null $name
+     * @param string|null $filePath
+     * @param string      $fileName
      *
      * @return bool
      */
-    public function sendSingleStandardMail(Email $to, MailSubject $subject, MailMessage $message): bool
+    public function sendSingleStandardMail(Email $to, Title $subject, Text $message, string $name = null, string $filePath = null, string $fileName = ''): bool
     {
-        // Create a message
-        /** @var Swift_Message $mailMessage */
-        $mailMessage = $this->buildMessage($to, $subject, $message);
+        $backup = null;
 
-        if ($this->mailer->send($mailMessage, $this->errors) !== false) {
-            if ($this->logger !== null) {
-                echo 'Success';
-            }
+        if (ENVIRONMENT === 'testing') {
+            $to = Email::fromString($this->mailerConfiguration['testing']);
         } else {
-            if ($this->logger !== null) {
-                echo 'Error:' . $this->logger->dump();
-            }
-
-            return false;
+            $backup = Email::fromString($this->mailerConfiguration['backup']);
         }
 
-        return true;
+        // Create a message
+        /** @var Swift_Message $mailMessage */
+        $mailMessage = $this->buildMessage($to, $subject, $message, $filePath, $fileName, $backup, $name);
+
+        $sent = false;
+        if ($this->mailer->send($mailMessage, $this->errors) > 0) {
+            $sent = true;
+        }
+
+        if ($this->logger !== null) {
+            if ($sent === true) {
+                $this->logger->addNotice($to->getEmail() . ' verschickt');
+            } else {
+                $this->logger->addNotice($to->getEmail() . ' nicht verschickt');
+            }
+        }
+
+        return $sent;
     }
 
     /**
-     * register logger for debugging
+     * @return Swift_Mailer
      */
-    protected function registerLogger(): void
+    public function getMailer(): Swift_Mailer
     {
-        $this->logger = new \Swift_Plugins_Loggers_ArrayLogger();
-        $this->mailer->registerPlugin(new \Swift_Plugins_LoggerPlugin($this->logger));
+        return $this->mailer;
     }
 
     /**
      * @param Email       $to
-     * @param MailSubject $subject
-     * @param MailMessage $message
+     * @param Title       $subject
+     * @param Text        $message
+     *
+     * @param string      $filePath
+     *
+     * @param string      $fileName
+     *
+     * @param Email|null  $backup
+     *
+     * @param string|null $name
      *
      * @return Swift_Message
      */
-    protected function buildMessage(Email $to, MailSubject $subject, MailMessage $message): Swift_Message
-    {
+    protected function buildMessage(
+        Email $to,
+        Title $subject,
+        Text $message,
+        string $filePath = null,
+        string $fileName = '',
+        Email $backup = null,
+        string $name = null
+    ): Swift_Message {
         $standardMailName = null;
         if (empty($this->mailerConfiguration['standard_from_name']) === false) {
             $standardMailName = $this->mailerConfiguration['standard_from_name'];
         }
+        $swiftMessage = new Swift_Message($subject->getTitle());
 
-        $swiftMessage = new Swift_Message($subject->getSubject());
+        $mailBody = $this->content->getEntryByName('mail/header') . $message->getText() . $this->content->getEntryByName('mail/footer');
 
         $swiftMessage->setFrom([$this->mailerConfiguration['standard_from_mail'] => $standardMailName]);
-        $swiftMessage->setTo($to->getEmail());
-        $swiftMessage->setBody($message->getMessage());
+        $swiftMessage->setTo($to->getEmail(), $name);
+        $swiftMessage->setBody($mailBody, 'text/html');
+
+        if (empty($filePath) === false) {
+            $attachment = Swift_Attachment::fromPath($filePath);
+
+            if (empty($fileName) === true) {
+                $fileName = 'anhang.pdf';
+            }
+
+            $attachment->setFilename($fileName);
+            $swiftMessage->attach($attachment);
+        }
+
+        if ($backup !== null) {
+            $swiftMessage->setBcc($backup->getEmail());
+        }
 
         return $swiftMessage;
     }

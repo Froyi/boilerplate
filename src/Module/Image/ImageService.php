@@ -2,6 +2,8 @@
 
 namespace Project\Module\Image;
 
+use Exception;
+
 /**
  * Class ImageService
  * @package     Project\Module\Image
@@ -13,7 +15,7 @@ class ImageService
      * @param $path
      *
      * @return Image
-     * @throws \Exception
+     * @throws Exception
      */
     public function getImageFromPath($path): Image
     {
@@ -25,7 +27,7 @@ class ImageService
      * @param string $path
      *
      * @return null|Image
-     * @throws \Exception
+     * @throws Exception
      */
     public static function fromUploadWithSave(array $uploadedFile, string $path): ?Image
     {

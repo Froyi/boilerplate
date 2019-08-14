@@ -2,6 +2,8 @@
 
 namespace Project;
 
+use InvalidArgumentException;
+
 /**
  * Class Configuration
  * @package Project
@@ -14,7 +16,7 @@ class Configuration
 
     protected const JS_CONFIG_PATH = ROOT_PATH . '/config-js.php';
 
-    protected const ENV_CONFIG_PATH = ROOT_PATH . '/config-env.php';
+    protected const ENV_CONFIG_PATH = ROOT_PATH . '/environment.php';
 
     protected const CONFIG_LIST = [
         'default' => self::DEFAULT_CONFIG_PATH,
@@ -26,6 +28,21 @@ class Configuration
     /** @var array $configuration */
     protected $configuration;
 
+    /** @var null|self $instance */
+    public static $instance;
+
+    /**
+     * @return Configuration
+     */
+    public static function getInstance(): self
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
     /**
      * Configuration constructor.
      */
@@ -35,6 +52,7 @@ class Configuration
 
         foreach(self::CONFIG_LIST as $config) {
             /** @noinspection SlowArrayOperationsInLoopInspection */
+            /** @noinspection PhpIncludeInspection */
             $this->configuration = array_merge($this->configuration, include $config);
         }
     }
@@ -51,12 +69,11 @@ class Configuration
      * @param string $name
      *
      * @return mixed
-     * @throws \InvalidArgumentException
      */
     public function getEntryByName(string $name)
     {
         if (!isset($this->configuration[$name])) {
-            throw new \InvalidArgumentException('there has to be a valid config key');
+            throw new InvalidArgumentException('there has to be a valid config key');
         }
 
         return $this->configuration[$name];

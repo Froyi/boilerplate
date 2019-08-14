@@ -2,12 +2,14 @@
 
 namespace Project\Module\GenericValueObject;
 
+use JsonSerializable;
+
 /**
  * Class DefaultGenericValueObject
  * @package     Project\Module\GenericValueObject
  * @copyright   Copyright (c) 2018 Maik Schößler
  */
-class DefaultGenericValueObject implements \JsonSerializable
+class DefaultGenericValueObject implements JsonSerializable
 {
     /**
      * @return array|mixed

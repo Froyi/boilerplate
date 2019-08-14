@@ -3,6 +3,11 @@ declare (strict_types=1);
 
 namespace Project\Utilities;
 
+use Exception;
+use Project\Module\DefaultModel;
+use function is_bool;
+use function strlen;
+
 /**
  * Class Tools
  * @package Project\Utilities
@@ -20,15 +25,15 @@ class Tools
         $value = false;
 
         if (isset($_GET[$name]) && empty($_GET[$name]) === false) {
-            $value = $_GET[$name];
+            return $_GET[$name];
         }
 
         if (isset($_POST[$name]) && empty($_POST[$name]) === false) {
-            $value = $_POST[$name];
+            return $_POST[$name];
         }
 
         if (isset($_SESSION[$name]) && empty($_SESSION[$name]) === false) {
-            $value = $_SESSION[$name];
+            return $_SESSION[$name];
         }
 
         return $value;
@@ -48,6 +53,28 @@ class Tools
     }
 
     /**
+     * @param string $default
+     *
+     * @return string
+     */
+    public static function getRefererRoute(string $default = ''): string
+    {
+        if (isset($_SERVER['HTTP_REFERER']) === false) {
+            return $default;
+        }
+
+        $referer = $_SERVER['HTTP_REFERER'];
+
+        $pos = strpos($referer, 'route=');
+
+        if ($pos === false) {
+            return $default;
+        }
+
+        return substr($referer, $pos + 6);
+    }
+
+    /**
      * @param string $route
      * @param array  $parameter
      *
@@ -62,6 +89,10 @@ class Tools
         $url = self::STANDARD_URL . '?route=' . $route;
 
         foreach ($parameter as $key => $value) {
+            if (is_bool($value) === true) {
+                $value = (int)$value;
+            }
+
             $url .= '&' . $key . '=' . $value;
         }
 
@@ -72,11 +103,12 @@ class Tools
      * @param string $text
      * @param int    $amount
      * @param bool   $points
+     *
      * @return string
      */
     public static function shortener(string $text, int $amount = 50, bool $points = true): string
     {
-        if (\strlen($text) <= $amount) {
+        if (strlen($text) <= $amount) {
             return $text;
         }
 
@@ -87,5 +119,35 @@ class Tools
         }
 
         return $newText;
+    }
+
+    /**
+     * @param array $array
+     *
+     * @return array
+     */
+    public static function serializeObjectsInArray(array $array): array
+    {
+        $outputArray = [];
+
+        /** @var DefaultModel $entry */
+        foreach ($array as $key => $entry) {
+            $outputArray[$key] = $entry->toArray();
+        }
+
+        return $outputArray;
+    }
+
+    /**
+     * @param int $percentage
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public static function shallWeRefresh(int $percentage = 10): bool
+    {
+        $randomNumber = random_int(1, 100);
+
+        return $randomNumber <= $percentage;
     }
 }

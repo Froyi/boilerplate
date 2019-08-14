@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
+use Project\Module\GenericValueObject\Name;
 
 /**
  * Class Test
@@ -10,33 +11,37 @@ class NameTest extends TestCase
 {
     /**
      * @dataProvider namesValidProvider
+     *
+     * @param $name
      */
-    public function testNameIsValid($name)
+    public function testNameIsValid($name): void
     {
-        $this->assertSame($name, \Project\Module\GenericValueObject\Name::fromString($name)->getName());
+        $this->assertSame($name, Name::fromString($name)->getName());
     }
 
     /**
      * @dataProvider namesTypeErrorProvider
      *
      * @expectedException TypeError
+     * @param $name
      */
-    public function testNamesTypeError($name)
+    public function testNamesTypeError($name): void
     {
-        \Project\Module\GenericValueObject\Name::fromString($name);
+        Name::fromString($name);
     }
 
     /**
      * @dataProvider namesInvalidProvider
      *
      * @expectedException InvalidArgumentException
+     * @param $name
      */
-    public function testNamesInvlidArgument($name)
+    public function testNamesInvlidArgument($name): void
     {
-        \Project\Module\GenericValueObject\Name::fromString($name);
+        Name::fromString($name);
     }
 
-    public function namesValidProvider()
+    public function namesValidProvider(): array
     {
         return [
             ['Peter'],
@@ -46,7 +51,7 @@ class NameTest extends TestCase
         ];
     }
 
-    public function namesTypeErrorProvider()
+    public function namesTypeErrorProvider(): array
     {
         return [
             [2],
@@ -56,7 +61,7 @@ class NameTest extends TestCase
         ];
     }
 
-    public function namesInvalidProvider()
+    public function namesInvalidProvider(): array
     {
         return [
             ['a'],

@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
+use Project\Module\GenericValueObject\Distance;
 
 /**
  * Class Test
@@ -10,13 +11,17 @@ class DistanceTest extends TestCase
 {
     /**
      * @dataProvider distanceValidProvider
+     *
+     * @param $distance
+     * @param $isMeter
+     * @param $result
      */
-    public function testDistanceIsValid($distance, $isMeter, $result)
+    public function testDistanceIsValid($distance, $isMeter, $result): void
     {
-        $this->assertSame($result, \Project\Module\GenericValueObject\Distance::fromValue($distance, $isMeter)->getDistance());
+        $this->assertSame($result, Distance::fromValue($distance, $isMeter)->getDistance());
     }
 
-    public function distanceValidProvider()
+    public function distanceValidProvider(): array
     {
         return [
             [3, true, 3],

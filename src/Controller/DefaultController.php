@@ -3,11 +3,18 @@ declare (strict_types=1);
 
 namespace Project\Controller;
 
+use InvalidArgumentException;
 use Project\Configuration;
+use Project\Content;
 use Project\Module\Database\Database;
+use Project\Module\GenericValueObject\Date;
+use Project\Module\GenericValueObject\Id;
 use Project\Module\Notification\NotificationService;
-use Project\Service\JsPluginService;
-use Project\View\ViewRenderer;
+use Project\Module\Pdf\PdfService;
+use Project\Module\User\User;
+use Project\Module\User\UserService;
+use Project\Service\Logger;
+use Project\Utilities\Tools;
 
 /**
  * Class DefaultController
@@ -15,11 +22,14 @@ use Project\View\ViewRenderer;
  */
 class DefaultController
 {
-    /** @var ViewRenderer $viewRenderer */
-    protected $viewRenderer;
+    /** @var string LOGO_MAIN_NAME */
+    protected const LOGO_MAIN_NAME = 'logoMain';
 
     /** @var Configuration $configuration */
     protected $configuration;
+
+    /** @var Content $content */
+    protected $content;
 
     /** @var NotificationService $notificationService */
     protected $notificationService;
@@ -27,97 +37,96 @@ class DefaultController
     /** @var Database $database */
     protected $database;
 
+    /** @var Date $today */
+    protected $today;
+
+    /** @var UserService $userService */
+    protected $userService;
+
+    /** @var null|User $loggedInUser */
+    protected $loggedInUser;
+
+    /** @var Logger $logger */
+    protected $logger;
+
+    /** @var PdfService $pdfService */
+    protected $pdfService;
+
     /**
      * DefaultController constructor.
      *
      * @param Configuration $configuration
-     * @param string        $routeName
      */
-    public function __construct(Configuration $configuration, string $routeName)
+    public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;
-        $this->viewRenderer = new ViewRenderer($this->configuration);
-        $this->database = new Database($this->configuration);
+        $this->content = Content::getInstance();
+
+        $this->logger = Logger::getInstance();
+
+        try {
+            $this->database = new Database($this->configuration);
+        } catch (InvalidArgumentException $exception) {
+            $this->logger->addCritical('Die Datenbank ist weg!!!');
+            echo 'No connection to Database!';
+            exit;
+        }
+
+        $this->today = Date::fromValue('today');
+
+        $this->userService = new UserService($this->database);
         $this->notificationService = new NotificationService();
 
-        $this->setDefaultViewConfig();
+        try {
+            if (Tools::getValue('userId') !== false) {
+                $userId = Id::fromString(Tools::getValue('userId'));
+                $this->loggedInUser = $this->userService->getLoggedInUserByUserId($userId);
+            }
+        } catch (InvalidArgumentException $exception) {
+            $this->logger->addNotice('Es wurde versucht einen Nutzer mit ungültiger UserId anzumelden. UserId: ' . Tools::getValue('userId'));
+        }
 
-        $this->setJsPackages($routeName);
-    }
+        $this->pdfService = new PdfService();
 
-    /**
-     * Sets default view parameter for sidebar etc.
-     */
-    protected function setDefaultViewConfig(): void
-    {
-        $this->viewRenderer->addViewConfig('page', 'notfound');
-
-        /**
-         * Notifications
-         */
-        $notifications = $this->notificationService->getNotifications(false);
-
-        $this->viewRenderer->addViewConfig('notifications', $notifications);
+        $this->userService = new UserService($this->database);
     }
 
     /**
      * @param string $routeName
+     * @param string $message
      */
-    protected function setJsPackages(string $routeName): void
+    protected function errorRouting(string $routeName, string $message = null): void
     {
-        $jsPlugInService = new JsPluginService($this->configuration);
-
-        $jsMainPackage = $jsPlugInService->getMainPackages();
-        $this->viewRenderer->addViewConfig('jsPlugins', $jsMainPackage);
-
-        $jsRoutePackage = $jsPlugInService->getPackagesByRouteName($routeName);
-        $this->viewRenderer->addViewConfig('jsRoutePlugins', $jsRoutePackage);
-    }
-
-    /**
-     * not found action
-     * @throws \Twig_Error_Syntax
-     * @throws \InvalidArgumentException
-     * @throws \Twig_Error_Runtime
-     */
-    public function notFoundAction(): void
-    {
-        try {
-            $this->viewRenderer->addViewConfig('page', 'notfound');
-
-            $this->viewRenderer->renderTemplate();
-        } catch (\Twig_Error_Loader $error) {
-            echo 'Alles ist kaputt!';
+        if ($message !== null) {
+            $this->notificationService->setError($message);
         }
+
+        header('Location: ' . Tools::getRouteUrl($routeName));
+        exit;
     }
 
     /**
-     * error action
-     * @throws \Twig_Error_Runtime
-     * @throws \InvalidArgumentException
-     * @throws \Twig_Error_Syntax
-     * @throws \Twig_Error_Loader
+     * @param string      $routeName
+     * @param string|null $message
+     * @param array       $parameter
      */
-    public function errorPageAction(): void
+    protected function successRouting(string $routeName, string $message = null, array $parameter = []): void
     {
-        $this->showStandardPage('error');
-    }
-
-    /**
-     * @param string $name
-     * @throws \InvalidArgumentException
-     * @throws \Twig_Error_Syntax
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Loader
-     */
-    protected function showStandardPage(string $name): void
-    {
-        try {
-            $this->viewRenderer->addViewConfig('page', $name);
-
-            $this->viewRenderer->renderTemplate();
-        } catch (\InvalidArgumentException $error) {
-            $this->notFoundAction();
+        if ($message !== null) {
+            $this->notificationService->setSuccess($message);
         }
+
+        header('Location: ' . Tools::getRouteUrl($routeName, $parameter));
+        exit;
+    }
+
+    /**
+     * @param string $routeName
+     * @param array  $parameter
+     */
+    protected function redirect(string $routeName, array $parameter = []): void
+    {
+        header('Location: ' . Tools::getRouteUrl($routeName, $parameter));
+        exit;
     }
 }

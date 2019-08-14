@@ -2,6 +2,7 @@
 
 namespace Project\Service;
 
+use InvalidArgumentException;
 use Project\Configuration;
 
 /**
@@ -33,9 +34,14 @@ class JsPluginService
     public function getMainPackages(): array
     {
         $jsMainPackage = [];
-        $jsBox = $this->configuration->getEntryByName('js-boxes');
 
-        if (isset($jsBox['main'])) {
+        try {
+            $jsBox = $this->configuration->getEntryByName('js-boxes');
+        } catch (InvalidArgumentException $exception) {
+            return $jsMainPackage;
+        }
+
+        if (empty($jsBox['main']) === false) {
             foreach ($jsBox['main'] as $package => $enabled) {
                 if ($enabled === true) {
                     $jsMainPackage[] = $this->getPackageByPackageName($package);
@@ -56,7 +62,12 @@ class JsPluginService
     public function getPackagesByRouteName(string $routeName): array
     {
         $jsRoutePackage = [];
-        $route = $this->configuration->getEntryByName('route')[$routeName];
+
+        try {
+            $route = $this->configuration->getEntryByName('route')[$routeName];
+        } catch (InvalidArgumentException $exception) {
+            return $jsRoutePackage;
+        }
 
         if (empty($route) === false && empty($route[self::PACKAGES_NAME]) === false) {
             foreach ($route[self::PACKAGES_NAME] as $routePackage => $enabled) {
@@ -78,7 +89,11 @@ class JsPluginService
      */
     protected function getPackageByPackageName(string $packageName): string
     {
-        $jsPackage = $this->configuration->getEntryByName('js-packages');
+        try {
+            $jsPackage = $this->configuration->getEntryByName('js-packages');
+        } catch (InvalidArgumentException $exception) {
+            return '';
+        }
 
         if (isset($jsPackage[$packageName]) === false) {
             return '';

@@ -4,6 +4,8 @@ declare (strict_types=1);
 namespace Project\Module\Image;
 
 use claviska\SimpleImage;
+use Exception;
+use InvalidArgumentException;
 use Project\Module\DefaultModel;
 
 /**
@@ -44,7 +46,7 @@ class Image extends DefaultModel
      *
      * @param string $path
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function __construct(string $path)
     {
@@ -75,7 +77,7 @@ class Image extends DefaultModel
      * @param string $path
      *
      * @return Image
-     * @throws \Exception
+     * @throws Exception
      */
     public static function fromFile(string $path): self
     {
@@ -118,18 +120,28 @@ class Image extends DefaultModel
      * @param string $path
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function saveToPath(string $path): bool
     {
         try {
             $this->image->toFile($path, null, self::SAVE_QUALITY);
-        } catch (\InvalidArgumentException $error) {
+        } catch (InvalidArgumentException $error) {
             return false;
         }
 
         $this->imagePath = $path;
 
         return true;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        // TODO: Implement toArray() method.
+
+        return [];
     }
 }

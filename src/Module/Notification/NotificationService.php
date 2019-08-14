@@ -2,13 +2,15 @@
 
 namespace Project\Module\Notification;
 
+use function is_array;
+use Project\Module\DefaultService;
 use Project\Utilities\Tools;
 
 /**
  * Class NotificationService
  * @package     Project\Module\Notification
  */
-class NotificationService
+class NotificationService extends DefaultService
 {
     /** @var NotificationFactory $notificationFactory */
     protected $notificationFactory;
@@ -18,6 +20,8 @@ class NotificationService
      */
     public function __construct()
     {
+        parent::__construct();
+
         $this->notificationFactory = new NotificationFactory();
     }
 
@@ -32,7 +36,7 @@ class NotificationService
         /** @var array $notificationsData */
         $notificationsData = Tools::getValue('notifications');
 
-        if ($notificationsData === false || \is_array($notificationsData) === false) {
+        if ($notificationsData === false || is_array($notificationsData) === false) {
             return $notifications;
         }
 

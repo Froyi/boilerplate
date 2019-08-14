@@ -1,11 +1,10 @@
-<?php declare (strict_types=1);
+<?php
+declare (strict_types=1);
 
 namespace Project\Controller;
 
-use Project\Module\GenericValueObject\Email;
+use Project\Configuration;
 use Project\Module\Mailer\MailerService;
-use Project\Module\Mailer\MailMessage;
-use Project\Module\Mailer\MailSubject;
 
 /**
  * Class MailerController
@@ -13,23 +12,18 @@ use Project\Module\Mailer\MailSubject;
  */
 class MailerController extends DefaultController
 {
-    public function sendMailAction(): void
+    /** @var MailerService $mailerService */
+    protected $mailerService;
+
+    /**
+     * MailerController constructor.
+     *
+     * @param Configuration $configuration
+     */
+    public function __construct(Configuration $configuration)
     {
-        $to = Email::fromString('ms2002@onlinehome.de');
-        /** @var MailSubject $subject */
-        $subject = MailSubject::fromString('Boilerplate Test');
-        /** @var MailMessage $message */
-        $message = MailMessage::fromString('This is a test Message.');
+        parent::__construct($configuration);
 
-        $mailerService = null;
-        try {
-            $mailerService = new MailerService($this->configuration, true);
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-        }
-
-        if ($mailerService !== null) {
-            $mailerService->sendSingleStandardMail($to, $subject, $message);
-        }
+        $this->mailerService = new MailerService($configuration, $this->content);
     }
 }

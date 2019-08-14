@@ -3,6 +3,9 @@ declare (strict_types=1);
 
 namespace Project\Module\GenericValueObject;
 
+use InvalidArgumentException;
+use function strlen;
+
 /**
  * Class Message
  * @package Project\Module\GenericValueObject
@@ -29,7 +32,6 @@ class Message extends DefaultGenericValueObject
      * @param string $message
      *
      * @return Message
-     * @throws \InvalidArgumentException
      */
     public static function fromString(string $message): self
     {
@@ -42,12 +44,11 @@ class Message extends DefaultGenericValueObject
     /**
      * @param string $message
      *
-     * @throws \InvalidArgumentException
      */
     protected static function ensureMessageIsValid(string $message): void
     {
-        if (\strlen($message) < self::MIN_MESSAGE_LENGTH) {
-            throw new \InvalidArgumentException('The message is not long enough.', 1);
+        if (strlen($message) < self::MIN_MESSAGE_LENGTH) {
+            throw new InvalidArgumentException('The message is not long enough.', 1);
         }
     }
 

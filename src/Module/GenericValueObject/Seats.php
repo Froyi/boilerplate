@@ -3,6 +3,8 @@ declare (strict_types=1);
 
 namespace Project\Module\GenericValueObject;
 
+use InvalidArgumentException;
+
 /**
  * Class Seats
  * @package Project\Module\GenericValueObject
@@ -26,7 +28,7 @@ class Seats extends DefaultGenericValueObject
     /**
      * @param int $seats
      * @return Seats
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public static function fromValue(int $seats): self
     {
@@ -37,12 +39,12 @@ class Seats extends DefaultGenericValueObject
 
     /**
      * @param $seats
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected static function ensureSeatsIsValid($seats): void
     {
         if ($seats < self::SEATS_MIN) {
-            throw new \InvalidArgumentException('Too few seats chosen.', 1);
+            throw new InvalidArgumentException('Too few seats chosen.', 1);
         }
     }
 

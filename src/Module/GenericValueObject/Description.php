@@ -3,12 +3,18 @@ declare (strict_types=1);
 
 namespace Project\Module\GenericValueObject;
 
+use InvalidArgumentException;
+use function strlen;
+
 /**
  * Class Description
  * @package Project\Module\GenericValueObject
  */
 class Description extends DefaultGenericValueObject
 {
+    /** @var int MIN_LENGTH */
+    protected const MIN_LENGTH = 2;
+
     /** @var string $description */
     protected $description;
 
@@ -24,24 +30,22 @@ class Description extends DefaultGenericValueObject
     /**
      * @param string $description
      * @return Description
-     * @throws \InvalidArgumentException
      */
     public static function fromString(string $description): self
     {
-        self::ensureDescriptionIsValid($description);
         $description = self::convertDescription($description);
+        self::ensureDescriptionIsValid($description);
 
         return new self($description);
     }
 
     /**
      * @param string $description
-     * @throws \InvalidArgumentException
      */
     protected static function ensureDescriptionIsValid(string $description): void
     {
-        if (\strlen($description) < 2) {
-            throw new \InvalidArgumentException('The description is not long enough.', 1);
+        if (strlen($description) < self::MIN_LENGTH) {
+            throw new InvalidArgumentException('The description is not long enough.', 1);
         }
     }
 

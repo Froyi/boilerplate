@@ -4,6 +4,7 @@ namespace Project\Module\Notification;
 
 use Project\Module\DefaultModel;
 use Project\Module\GenericValueObject\Message;
+use stdClass;
 
 /**
  * Class Notification
@@ -50,13 +51,27 @@ class Notification extends DefaultModel
         return $this->message;
     }
 
-    public function toSession(): \stdClass
+    /**
+     * @return stdClass
+     */
+    public function toSession(): stdClass
     {
-        $object = new \stdClass();
+        $object = new stdClass();
 
         $object->level = $this->level->getLevel();
         $object->message = $this->message->getMessage();
 
         return $object;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'level' => $this->getLevel()->getLevel(),
+            'message' => $this->getMessage()->getMessage()
+        ];
     }
 }

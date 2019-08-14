@@ -3,12 +3,20 @@ declare (strict_types=1);
 
 namespace Project\Module\GenericValueObject;
 
+use InvalidArgumentException;
+use function strlen;
+
 /**
  * Class Password
  * @package Project\Module\GenericValueObject
  */
 class Password extends DefaultGenericValueObject
 {
+    /** @var int GENERATED_LENGTH */
+    protected const GENERATED_LENGTH = 8;
+
+    protected const POSSIBLE_CHARS = 'abcdefghjklmnprstuvwxyzABCDEFGHJKLMNPRSTUVWXYZ23456789.,#+*-?!';
+
     /** @var string $password */
     protected $password;
 
@@ -24,7 +32,6 @@ class Password extends DefaultGenericValueObject
     /**
      * @param string $password
      * @return Password
-     * @throws \InvalidArgumentException
      */
     public static function fromString(string $password): self
     {
@@ -34,28 +41,50 @@ class Password extends DefaultGenericValueObject
     }
 
     /**
+     * @param int|null $length
+     *
+     * @return Password
+     */
+    public static function generatePassword(int $length = null): self
+    {
+        $password = '';
+
+        if ($length === null) {
+            $length = self::GENERATED_LENGTH;
+        }
+
+        $array = str_split(self::POSSIBLE_CHARS);
+        shuffle($array);
+
+        for ($i = 0; $i < $length; $i++) {
+            $password .= $array[array_rand($array)];
+        }
+
+        return self::fromString($password);
+    }
+
+    /**
      * @param string $password
-     * @throws \InvalidArgumentException
      */
     protected static function ensurePasswordIsValid(string $password): void
     {
-        if (\strlen($password) < 5) {
-            throw new \InvalidArgumentException('Dieser password ist zu kurz!', 1);
+        if (strlen($password) < 5) {
+            throw new InvalidArgumentException('Dieser password ist zu kurz!', 1);
         }
 
         $uppercase = preg_match('@[A-Z]@', $password);
         if ($uppercase === false) {
-            throw new \InvalidArgumentException('Dieses Passwort hat keine Großbuchstaben!', 1);
+            throw new InvalidArgumentException('Dieses Passwort hat keine Großbuchstaben!', 1);
         }
 
         $lowercase = preg_match('@[a-z]@', $password);
         if ($lowercase === false) {
-            throw new \InvalidArgumentException('Dieses Passwort enthält keinen Kleinbuchstaben!', 1);
+            throw new InvalidArgumentException('Dieses Passwort enthält keinen Kleinbuchstaben!', 1);
         }
 
         $number = preg_match('@\d@', $password);
         if ($number === false) {
-            throw new \InvalidArgumentException('Dieses Passwort enthält keine Zahl!', 1);
+            throw new InvalidArgumentException('Dieses Passwort enthält keine Zahl!', 1);
         }
     }
 

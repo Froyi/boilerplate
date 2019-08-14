@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace Project\Module\GenericValueObject;
 
+use InvalidArgumentException;
+use function is_int;
+use function is_string;
+
 /**
  * Class Distance
  * @package Project\Module\GenericValueObject
@@ -27,7 +31,6 @@ class Distance
      * @param bool|null $isMeter
      *
      * @return Distance
-     * @throws \InvalidArgumentException
      */
     public static function fromValue($value, ?bool $isMeter = true): self
     {
@@ -39,12 +42,12 @@ class Distance
     /**
      * @param $value
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected static function ensureValueIsValid($value): void
     {
-        if (\is_int($value) === false && \is_string($value) === false) {
-            throw new \InvalidArgumentException('This value is neither an int nor a string.');
+        if (is_int($value) === false && is_string($value) === false) {
+            throw new InvalidArgumentException('This value is neither an int nor a string.');
         }
     }
 

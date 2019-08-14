@@ -14,13 +14,13 @@ class Link extends DefaultGenericValueObject
     protected $link;
 
     /**
-     * @param string $link
+     * @param string $linkString
      *
      * @return Link
      */
-    public static function fromString(string $link): self
+    public static function fromString(string $linkString): self
     {
-        $link = Http::createFromString($link);
+        $link = Http::createFromString($linkString);
 
         return new self($link);
     }

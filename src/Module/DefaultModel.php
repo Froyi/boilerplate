@@ -2,17 +2,26 @@
 
 namespace Project\Module;
 
+use JsonSerializable;
 use Project\Configuration;
+use Project\Content;
+use Project\Service\Logger;
 
 /**
  * Class DefaultModel
  * @package     Project\Module
  * @copyright   Copyright (c) 2018 Maik Schößler
  */
-class DefaultModel implements \JsonSerializable
+abstract class DefaultModel implements JsonSerializable
 {
     /** @var Configuration $configuration */
     protected $configuration;
+
+    /** @var Content $content */
+    protected $content;
+
+    /** @var Logger $logger */
+    protected $logger;
 
     /**
      * @return array|mixed
@@ -27,6 +36,13 @@ class DefaultModel implements \JsonSerializable
      */
     public function __construct()
     {
-        $this->configuration = new Configuration();
+        $this->configuration = Configuration::getInstance();
+        $this->content = Content::getInstance();
+        $this->logger = Logger::getInstance();
     }
+
+    /**
+     * @return array
+     */
+    abstract public function toArray(): array;
 }

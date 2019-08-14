@@ -3,39 +3,29 @@ declare (strict_types=1);
 
 namespace Project\Controller;
 
+use Project\View\ViewRenderer;
+
 /**
  * Class IndexController
  * @package Project\Controller
  */
-class IndexController extends DefaultController
+class IndexController extends DefaultViewController
 {
     /**
-     * index action (standard page)
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Loader
-     * @throws \InvalidArgumentException
-     * @throws \Twig_Error_Syntax
+     * Startseite
+     *
+     * Der Nutzer wird auf der Startseite viele verschiedene Übersichten zu sehen bekommen.
      */
     public function indexAction(): void
     {
-        $this->showStandardPage('home');
+        $this->viewRenderer->addViewConfig('page', 'home');
+
+        $this->viewRenderer->renderTemplate();
     }
 
-    /**
-     * another example index action
-     * @throws \Twig_Error_Runtime
-     * @throws \InvalidArgumentException
-     * @throws \Twig_Error_Syntax
-     */
-    public function differentIndexAction(): void
+    public function errorAction(): void
     {
-        try {
-            $this->viewRenderer->addViewConfig('slider', 'sliderVariable');
-            $this->viewRenderer->addViewConfig('page', 'home');
-
-            $this->viewRenderer->renderTemplate();
-        } catch (\Twig_Error_Loader $error) {
-            $this->notFoundAction();
-        }
+        $this->viewRenderer->addViewConfig('page', 'error');
+        $this->viewRenderer->renderTemplate(ViewRenderer::PAGE_TEMPLATE);
     }
 }

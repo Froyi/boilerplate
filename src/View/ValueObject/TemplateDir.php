@@ -3,6 +3,9 @@ declare (strict_types=1);
 
 namespace Project\View\ValueObject;
 
+use InvalidArgumentException;
+use function strlen;
+
 /**
  * Class TemplateDir
  * @package Project\View\ValueObject
@@ -24,7 +27,7 @@ class TemplateDir
     /**
      * @param string $templateDir
      * @return TemplateDir
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public static function fromString(string $templateDir): self
     {
@@ -38,12 +41,12 @@ class TemplateDir
 
     /**
      * @param string $templateDir
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected static function ensureValueIsValid(string $templateDir): void
     {
-        if (\strlen($templateDir) < 3) {
-            throw new \InvalidArgumentException('this template dir is too short ... minimum three chars');
+        if (strlen($templateDir) < 3) {
+            throw new InvalidArgumentException('this template dir is too short ... minimum three chars');
         }
     }
 
@@ -60,12 +63,12 @@ class TemplateDir
 
     /**
      * @param string $templateDir
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected static function ensureTemplateDirExists(string $templateDir): void
     {
         if (is_dir($templateDir) === false) {
-            throw new \InvalidArgumentException('this template dir is no valid dir ... it does not exists.');
+            throw new InvalidArgumentException('this template dir is no valid dir ... it does not exists.');
         }
     }
 

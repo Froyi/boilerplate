@@ -3,6 +3,8 @@ declare (strict_types=1);
 
 namespace Project\Module\GenericValueObject;
 
+use InvalidArgumentException;
+
 /**
  * Class AbstractDatetime
  * @package Project\Module\GenericValueObject
@@ -26,7 +28,7 @@ abstract class AbstractDatetime extends DefaultGenericValueObject
     /**
      * @param $datetime
      * @return AbstractDatetime
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public static function fromValue($datetime): self
     {
@@ -39,14 +41,14 @@ abstract class AbstractDatetime extends DefaultGenericValueObject
 
     /**
      * @param $datetime
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected static function ensureDatetimeIsValid($datetime): void
     {
         $datetime = strtotime($datetime);
 
         if ($datetime === false) {
-            throw new \InvalidArgumentException('Datetime konnte nicht umgewandelt werden');
+            throw new InvalidArgumentException('Datetime konnte nicht umgewandelt werden');
         }
     }
 
