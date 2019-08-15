@@ -52,13 +52,13 @@ class Migration
 
                 if ($this->isMigrationExecuted($version) === false) {
                     if ($this->migrateVersion($migration, $version) === true) {
-                        $this->output = '<p>+++ Migration ' . $version . ' wurde erfolgreich eingetragen.</p>' . $this->output;
+                        $this->output = '+++ Migration ' . $version . ' wurde erfolgreich eingetragen | ' . $this->output;
                     } else {
-                        $this->output = '<p>!!! Migration ' . $version . ' wurde nicht eingetragen.<br/>' . $migration . '</p>';
+                        $this->output = '!!! Migration ' . $version . ' wurde nicht eingetragen ' . $migration;
                         return false;
                     }
                 } else {
-                    $this->output = '<p>--- Migration ' . $version . ' wurde bereits eingetragen.</p>';
+                    $this->output = 'Alle Migrations wurden bereits eingetragen und sind aktuell.';
                 }
             }
         }

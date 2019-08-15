@@ -77,14 +77,14 @@ class DefaultController
         $this->userService = new UserService($this->database);
         $this->notificationService = new NotificationService();
 
-        try {
+        /*try {
             if (Tools::getValue('userId') !== false) {
                 $userId = Id::fromString(Tools::getValue('userId'));
                 $this->loggedInUser = $this->userService->getLoggedInUserByUserId($userId);
             }
         } catch (InvalidArgumentException $exception) {
             $this->logger->addNotice('Es wurde versucht einen Nutzer mit ungültiger UserId anzumelden. UserId: ' . Tools::getValue('userId'));
-        }
+        }*/
 
         $this->pdfService = new PdfService();
 
